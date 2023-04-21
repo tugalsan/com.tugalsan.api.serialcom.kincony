@@ -1,4 +1,4 @@
 --patch-module
-com.tugalsan.api.serialcom=_
+com.tugalsan.api.serialcom.kincony=_
 --add-reads
-com.tugalsan.api.serialcom=ALL-UNNAMED
+com.tugalsan.api.serialcom.kincony=ALL-UNNAMED

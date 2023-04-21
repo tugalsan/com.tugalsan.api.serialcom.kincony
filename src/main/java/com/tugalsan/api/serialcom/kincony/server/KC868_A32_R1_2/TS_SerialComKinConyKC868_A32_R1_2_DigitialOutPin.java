@@ -1,25 +1,25 @@
-package com.tugalsan.api.serialcom.kincony.server.core;
+package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2;
 
 import com.tugalsan.api.log.server.TS_Log;
 import java.util.Optional;
 
-public class TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOutPin {
+public class TS_SerialComKinConyKC868_A32_R1_2_DigitialOutPin {
 
-    final private static TS_Log d = TS_Log.of(TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOutPin.class);
+    final private static TS_Log d = TS_Log.of(TS_SerialComKinConyKC868_A32_R1_2_DigitialOutPin.class);
 
-    private TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOutPin(TS_SerialComChip_KinConyKC868_A32_R1_2 chip, int pin) {
+    private TS_SerialComKinConyKC868_A32_R1_2_DigitialOutPin(TS_SerialComKinConyKC868_A32_R1_2 chip, int pin) {
         this.chip = chip;
         this.pin = pin;
     }
-    final private TS_SerialComChip_KinConyKC868_A32_R1_2 chip;
+    final private TS_SerialComKinConyKC868_A32_R1_2 chip;
     final private int pin;
 
-    public static TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOutPin of(TS_SerialComChip_KinConyKC868_A32_R1_2 chip, int pin) {
-        return new TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOutPin(chip, pin);
+    public static TS_SerialComKinConyKC868_A32_R1_2_DigitialOutPin of(TS_SerialComKinConyKC868_A32_R1_2 chip, int pin) {
+        return new TS_SerialComKinConyKC868_A32_R1_2_DigitialOutPin(chip, pin);
     }
 
     public Optional<Boolean> getValueFromChip() {
-        var cmd = TS_SerialComChip_KinConyKC868_A32_R1_2_CommandBuilder.getDigitalOut(pin);
+        var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalOut(pin);
         if (cmd.isEmpty()) {
             d.ce("getValueFromChip", "cmd.isEmpty()", "pin", pin);
             return Optional.empty();
@@ -38,7 +38,7 @@ public class TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOutPin {
     private volatile boolean value = false;
 
     public boolean setValue(boolean value) {
-        var cmd = TS_SerialComChip_KinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut(pin, value);
+        var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut(pin, value);
         if (cmd.isEmpty()) {
             d.ce("setValue", "cmd.isEmpty()", "pin", pin, "value", value);
             return false;
@@ -57,7 +57,7 @@ public class TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOutPin {
     }
 
     public boolean oscillate(int secDuration, int secGap, int count) {
-        var cmd = TS_SerialComChip_KinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_Oscillating(pin, secDuration, secGap, count);
+        var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_Oscillating(pin, secDuration, secGap, count);
         if (cmd.isEmpty()) {
             d.ce("oscillate", "cmd.isEmpty()", "pin", pin, "secDuration", secDuration, "secGap", secGap, "count", count);
             return false;

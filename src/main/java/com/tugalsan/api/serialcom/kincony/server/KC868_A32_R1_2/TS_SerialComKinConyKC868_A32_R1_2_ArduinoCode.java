@@ -1,6 +1,6 @@
-package com.tugalsan.api.serialcom.kincony.server.core;
+package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2;
 
-public class TS_SerialComChip_KinConyKC868_A32_R1_2_ArduinoCode {
+public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
     /*
     
     //------------------------------------ TODO -----------------------------------------------------------------------

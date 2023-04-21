@@ -1,25 +1,25 @@
-package com.tugalsan.api.serialcom.kincony.server.core;
+package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2;
 
 import com.tugalsan.api.log.server.TS_Log;
 import java.util.Optional;
 
-public class TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialInPin {
+public class TS_SerialComKinConyKC868_A32_R1_2_DigitialInPin {
 
-    final private static TS_Log d = TS_Log.of(TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialInPin.class);
+    final private static TS_Log d = TS_Log.of(TS_SerialComKinConyKC868_A32_R1_2_DigitialInPin.class);
 
-    private TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialInPin(TS_SerialComChip_KinConyKC868_A32_R1_2 chip, int pin) {
+    private TS_SerialComKinConyKC868_A32_R1_2_DigitialInPin(TS_SerialComKinConyKC868_A32_R1_2 chip, int pin) {
         this.chip = chip;
         this.pin = pin;
     }
-    final private TS_SerialComChip_KinConyKC868_A32_R1_2 chip;
+    final private TS_SerialComKinConyKC868_A32_R1_2 chip;
     final private int pin;
 
-    public static TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialInPin of(TS_SerialComChip_KinConyKC868_A32_R1_2 chip, int pin) {
-        return new TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialInPin(chip, pin);
+    public static TS_SerialComKinConyKC868_A32_R1_2_DigitialInPin of(TS_SerialComKinConyKC868_A32_R1_2 chip, int pin) {
+        return new TS_SerialComKinConyKC868_A32_R1_2_DigitialInPin(chip, pin);
     }
 
     public Optional<Boolean> getValueFromChip() {
-        var cmd = TS_SerialComChip_KinConyKC868_A32_R1_2_CommandBuilder.getDigitalIn(pin);
+        var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalIn(pin);
         if (cmd.isEmpty()) {
             d.ce("getValueFromChip", "cmd.isEmpty()", "pin", pin);
             return Optional.empty();

@@ -1,8 +1,8 @@
-package com.tugalsan.api.serialcom.kincony.server.core;
+package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2;
 
 import java.util.Optional;
 
-public class TS_SerialComChip_KinConyKC868_A32_R1_2_CommandBuilder {
+public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
 
     public static boolean isPinValid(int pin) {
         return pin >= 0 && pin < 32;

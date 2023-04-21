@@ -1,34 +1,34 @@
-package com.tugalsan.api.serialcom.server.test.chip;
+package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2;
 
 import com.tugalsan.api.list.client.TGS_ListUtils;
 import com.tugalsan.api.log.server.TS_Log;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOut {
+public class TS_SerialComKinConyKC868_A32_R1_2_DigitialOut {
 
-    final private static TS_Log d = TS_Log.of(TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOut.class);
+    final private static TS_Log d = TS_Log.of(TS_SerialComKinConyKC868_A32_R1_2_DigitialOut.class);
 
-    private TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOut(TS_SerialComChip_KinConyKC868_A32_R1_2 chip) {
+    private TS_SerialComKinConyKC868_A32_R1_2_DigitialOut(TS_SerialComKinConyKC868_A32_R1_2 chip) {
         this.chip = chip;
         IntStream.range(0, 32).forEachOrdered(i -> {
-            pins.add(TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOutPin.of(chip, i));
+            pins.add(TS_SerialComKinConyKC868_A32_R1_2_DigitialOutPin.of(chip, i));
         });
     }
-    final private TS_SerialComChip_KinConyKC868_A32_R1_2 chip;
-    final private List<TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOutPin> pins = TGS_ListUtils.of();
+    final private TS_SerialComKinConyKC868_A32_R1_2 chip;
+    final private List<TS_SerialComKinConyKC868_A32_R1_2_DigitialOutPin> pins = TGS_ListUtils.of();
 
-    public static TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOut of(TS_SerialComChip_KinConyKC868_A32_R1_2 chip) {
-        return new TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOut(chip);
+    public static TS_SerialComKinConyKC868_A32_R1_2_DigitialOut of(TS_SerialComKinConyKC868_A32_R1_2 chip) {
+        return new TS_SerialComKinConyKC868_A32_R1_2_DigitialOut(chip);
     }
 
-    public TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOutPin pin(int pin) {
+    public TS_SerialComKinConyKC868_A32_R1_2_DigitialOutPin pin(int pin) {
         d.ci("pin", "i", pin);
         return pins.get(pin);
     }
 
     public boolean refreshAll() {
-        var cmd = TS_SerialComChip_KinConyKC868_A32_R1_2_CommandBuilder.getDigitalOut_All();
+        var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalOut_All();
         var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
         if (reply.isEmpty()) {
             return false;
@@ -47,7 +47,7 @@ public class TS_SerialComChip_KinConyKC868_A32_R1_2_DigitialOut {
     }
 
     public boolean setAll(boolean value) {
-        var cmd = TS_SerialComChip_KinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_All(value);
+        var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_All(value);
         var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
         if (reply.isEmpty()) {
             return false;

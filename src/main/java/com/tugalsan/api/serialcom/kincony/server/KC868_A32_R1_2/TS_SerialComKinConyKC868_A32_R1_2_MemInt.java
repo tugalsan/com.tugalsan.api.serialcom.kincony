@@ -1,26 +1,26 @@
-package com.tugalsan.api.serialcom.kincony.server.core;
+package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2;
 
 import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.string.server.TS_StringUtils;
 import java.util.stream.IntStream;
 
-public class TS_SerialComChip_KinConyKC868_A32_R1_2_MemInt {
+public class TS_SerialComKinConyKC868_A32_R1_2_MemInt {
 
-    final private static TS_Log d = TS_Log.of(TS_SerialComChip_KinConyKC868_A32_R1_2_MemInt.class);
+    final private static TS_Log d = TS_Log.of(TS_SerialComKinConyKC868_A32_R1_2_MemInt.class);
 
-    private TS_SerialComChip_KinConyKC868_A32_R1_2_MemInt(TS_SerialComChip_KinConyKC868_A32_R1_2 chip) {
+    private TS_SerialComKinConyKC868_A32_R1_2_MemInt(TS_SerialComKinConyKC868_A32_R1_2 chip) {
         this.chip = chip;
     }
-    final private TS_SerialComChip_KinConyKC868_A32_R1_2 chip;
+    final private TS_SerialComKinConyKC868_A32_R1_2 chip;
     final private int[] buffer = new int[16];
 
-    public static TS_SerialComChip_KinConyKC868_A32_R1_2_MemInt of(TS_SerialComChip_KinConyKC868_A32_R1_2 chip) {
-        return new TS_SerialComChip_KinConyKC868_A32_R1_2_MemInt(chip);
+    public static TS_SerialComKinConyKC868_A32_R1_2_MemInt of(TS_SerialComKinConyKC868_A32_R1_2 chip) {
+        return new TS_SerialComKinConyKC868_A32_R1_2_MemInt(chip);
     }
 
     public boolean refreshAll() {
-        var cmd = TS_SerialComChip_KinConyKC868_A32_R1_2_CommandBuilder.getMemInt_All();
+        var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getMemInt_All();
         var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
         if (reply.isEmpty()) {
             return false;
@@ -51,7 +51,7 @@ public class TS_SerialComChip_KinConyKC868_A32_R1_2_MemInt {
     }
 
     public boolean set(int idx, int secDuration) {
-        var cmd = TS_SerialComChip_KinConyKC868_A32_R1_2_CommandBuilder.setMemInt_Idx(idx, secDuration);
+        var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMemInt_Idx(idx, secDuration);
         if (cmd.isEmpty()) {
             return false;
         }
