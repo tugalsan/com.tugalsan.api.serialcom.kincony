@@ -8,7 +8,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
 
     final private static TS_Log d = TS_Log.of(TS_SerialComKinConyKC868_A32_R1_2_Test.class);
 
-    public static void test_static(
+    public static void test(
             boolean debugEnable,
             boolean test_chipname,
             boolean test_digitalIn_getAll,
