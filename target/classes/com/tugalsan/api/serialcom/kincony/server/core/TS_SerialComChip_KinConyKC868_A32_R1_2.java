@@ -1,4 +1,4 @@
-package com.tugalsan.api.serialcom.server.test.chip;
+package com.tugalsan.api.serialcom.kincony.server.core;
 
 import com.tugalsan.api.callable.client.TGS_CallableType1;
 import com.tugalsan.api.log.server.TS_Log;

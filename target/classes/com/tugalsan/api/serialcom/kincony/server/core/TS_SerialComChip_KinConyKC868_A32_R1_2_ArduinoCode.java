@@ -1,4 +1,4 @@
-package com.tugalsan.api.serialcom.server.test.chip;
+package com.tugalsan.api.serialcom.kincony.server.core;
 
 public class TS_SerialComChip_KinConyKC868_A32_R1_2_ArduinoCode {
     /*

@@ -1,4 +1,4 @@
-package com.tugalsan.api.serialcom.server.test.chip;
+package com.tugalsan.api.serialcom.kincony.server.core;
 
 import java.util.Optional;
 

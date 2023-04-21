@@ -1,8 +1,8 @@
-package com.tugalsan.api.serialcom.server.test;
+package com.tugalsan.api.serialcom.kincony.server;
 
+import com.tugalsan.api.serialcom.kincony.server.core.TS_SerialComChip_KinConyKC868_A32_R1_2;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.serialcom.server.*;
-import com.tugalsan.api.serialcom.server.test.chip.*;
 import java.util.stream.IntStream;
 
 public class TS_SerialComTestJavaCode {
