@@ -1,80 +1,161 @@
 package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2;
 
-import com.tugalsan.api.callable.client.TGS_CallableType1;
+import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.log.server.TS_Log;
-import com.tugalsan.api.serialcom.server.TS_SerialComBuilder;
-import com.tugalsan.api.serialcom.server.TS_SerialComMessageBroker;
-import java.time.Duration;
+import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialComKinConyKC868_A32_R1_2_Chip;
+import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder;
+import com.tugalsan.api.stream.client.TGS_StreamUtils;
+import com.tugalsan.api.string.server.TS_StringUtils;
+import java.util.List;
 import java.util.Optional;
 
 public class TS_SerialComKinConyKC868_A32_R1_2 {
 
     final private static TS_Log d = TS_Log.of(TS_SerialComKinConyKC868_A32_R1_2.class);
 
-    public static Duration defaultTimeoutDuration() {
-        return Duration.ofSeconds(10);
+    public static Optional<String> chipName() {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(chip -> chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.chipName(), chip.timeout, chip.validReplyPrefix, true));
     }
 
-    public static int defaultBrokerSize() {
-        return 10;
+    public static Optional<Boolean> digitalIn_getIdx(int pin) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalIn(pin);
+            if (cmd.isEmpty()) {
+                d.ce("digitalIn_getIdx", "ERROR_CMD_EMPTY", "pin", pin);
+                return Optional.empty();
+            }
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("digitalIn_getIdx", "ERROR_REPLY_EMPTY", reply);
+                return Optional.empty();
+            }
+            return Optional.of(reply.get().equals("1"));
+        });
     }
 
-    private TS_SerialComKinConyKC868_A32_R1_2(TS_SerialComMessageBroker mb, Duration timeout) {
-        this.mb = mb;
-        this.timeout = timeout;
-        this.digitalIn = TS_SerialComKinConyKC868_A32_R1_2_DigitialIn.of(this);
-        this.digitalOut = TS_SerialComKinConyKC868_A32_R1_2_DigitialOut.of(this);
-        this.mem_int = TS_SerialComKinConyKC868_A32_R1_2_MemInt.of(this);
-    }
-    final public TS_SerialComMessageBroker mb;
-    final public Duration timeout;
-    final public TS_SerialComKinConyKC868_A32_R1_2_DigitialIn digitalIn;
-    final public TS_SerialComKinConyKC868_A32_R1_2_DigitialOut digitalOut;
-    final public TS_SerialComKinConyKC868_A32_R1_2_MemInt mem_int;
-    final public String validReplyPrefix = "REPLY_OF:";
-    final public String validReplySuffixSet = "DONE";
-
-    public static TS_SerialComKinConyKC868_A32_R1_2 of(TS_SerialComMessageBroker mb, Duration timeout) {
-        return new TS_SerialComKinConyKC868_A32_R1_2(mb, timeout);
+    public static Optional<List<Boolean>> digitalIn_getAll() {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalIn_All();
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("digitalIn_getAll", "ERROR_REPLY_EMPTY", reply);
+                return Optional.empty();
+            }
+            if (reply.get().length() != 32) {
+                d.ce("digitalIn_getAll", "ERROR_SIZE_NOT_32", reply);
+                return Optional.empty();
+            }
+            return Optional.of(TGS_StreamUtils.toLst(reply.get().chars().boxed().map(c -> c.equals(Integer.valueOf('1')))));
+        });
     }
 
-    public static boolean callBoolResult(TGS_CallableType1<Boolean, TS_SerialComKinConyKC868_A32_R1_2> chip) {
-        TGS_CallableType1<Optional<Boolean>, TS_SerialComKinConyKC868_A32_R1_2> chip2 = c -> Optional.of(chip.call(c));
-        return callOptional(chip2, defaultTimeoutDuration()).get();
+    public static Optional<Boolean> digitalOut_getIdx(int pin) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalOut(pin);
+            if (cmd.isEmpty()) {
+                d.ce("digitalOut_getIdx", "ERROR_CMD_EMPTY", "pin", pin);
+                return Optional.empty();
+            }
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("digitalOut_getIdx", "ERROR_REPLY_EMPTY", reply);
+                return Optional.empty();
+            }
+            return Optional.of(reply.get().equals("1"));
+        });
     }
 
-    public static Optional<String> callStrOptional(TGS_CallableType1<Optional<String>, TS_SerialComKinConyKC868_A32_R1_2> chip) {
-        return callOptional(chip, defaultTimeoutDuration());
+    public static Optional<List<Boolean>> digitalOut_getAll() {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalOut_All();
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("digitalOut_getAll", "ERROR_REPLY_EMPTY", reply);
+                return Optional.empty();
+            }
+            if (reply.get().length() != 32) {
+                d.ce("digitalOut_getAll", "ERROR_SIZE_NOT_32", reply);
+                return Optional.empty();
+            }
+            return Optional.of(TGS_StreamUtils.toLst(reply.get().chars().boxed().map(c -> c.equals(Integer.valueOf('1')))));
+        });
     }
 
-    public static <T> Optional<T> callOptional(TGS_CallableType1<Optional<T>, TS_SerialComKinConyKC868_A32_R1_2> chip) {
-        return callOptional(chip, defaultTimeoutDuration());
+    public static boolean digitalOut_setAll(boolean value) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_All(value);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("digitalOut_setAll", "ERROR_REPLY_EMPTY", "value", value);
+                return false;
+            }
+            return reply.get().endsWith(chip.validReplySuffixSet);
+        });
     }
 
-    public static <T> Optional<T> callOptional(TGS_CallableType1<Optional<T>, TS_SerialComKinConyKC868_A32_R1_2> chip, Duration timeout) {
-        var result = new Object() {
-            Optional<T> value;
-        };
-        TS_SerialComBuilder.portFirst()
-                .baudRate_115200().dataBits_8().oneStopBit().parityNone()
-                .onPortError(() -> d.ce("onPortError", "Did you connect the cable and power up the device?"))
-                .onSetupError(() -> d.ce("onSetupError", "Is the port selection correct for the device?"))
-                .onConnectError(() -> d.ce("onConnectError", "Have you already connected by another program (like arduino serial monitor)?"))
-                .onReply_useDefaultMessageBroker_withMaxMessageCount(defaultBrokerSize())
-                .onSuccess_useAndClose_defaultMessageBroker((con, mb) -> {
-                    var chipDriver = TS_SerialComKinConyKC868_A32_R1_2.of(mb, timeout);
-                    result.value = chip.call(chipDriver);
-                });
-        return result.value;
+    public static boolean digitalOut_setIdx(int pin, boolean value) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut(pin, value);
+            if (cmd.isEmpty()) {
+                d.ce("digitalOut_setIdx", "ERROR_CMD_EMPTY", "pin", pin, "value", value);
+                return false;
+            }
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("digitalOut_setIdx", "ERROR_REPLY_EMPTY", "pin", pin, "value", value);
+                return false;
+            }
+            return reply.get().endsWith(chip.validReplySuffixSet);
+        });
     }
 
-    public Optional<String> chipName() {
-        if (chipName.isEmpty()) {
-            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.chipName();
-            var reply = mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, timeout, validReplyPrefix, true);
-            chipName = reply;
-        }
-        return chipName;
+    public static boolean digitalOut_oscilate(int pin, int secDuration, int secGap, int count) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_Oscillating(pin, secDuration, secGap, count);
+            if (cmd.isEmpty()) {
+                d.ce("digitalOut_oscilate", "ERROR_CMD_EMPTY", "pin", pin, "secDuration", secDuration, "secGap", secGap, "count", count);
+                return false;
+            }
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("digitalOut_oscilate", "ERROR_REPLY_EMPTY", "pin", pin, "secDuration", secDuration, "secGap", secGap, "count", count);
+            }
+            return reply.get().endsWith(chip.validReplySuffixSet);
+        });
     }
-    private volatile Optional<String> chipName = Optional.empty();
+
+    public static Optional<List<Integer>> memInt_getAll() {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getMemInt_All();
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("memInt_getAll", "ERROR_REPLY_EMPTY", reply);
+                return Optional.empty();
+            }
+            var results = TS_StringUtils.toList_spc(reply.get());
+            for (var val : results) {
+                if (!TGS_CastUtils.isInteger(val)) {
+                    d.ce("memInt_getAll", "ERROR_NOT_INT", val, reply.get(), results);
+                    Optional.empty();
+                }
+            }
+            return Optional.of(TGS_StreamUtils.toLst(results.stream().mapToInt(s -> Integer.valueOf(s))));
+        });
+    }
+
+    public static boolean memInt_setIdx(int idx, int value) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMemInt_Idx(idx, value);
+            if (cmd.isEmpty()) {
+                d.ce("memInt_setIdx", "ERROR_CMD_EMPTY", "idx", idx, "value", value);
+                return false;
+            }
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("memInt_setIdx", "ERROR_REPLY_EMPTY", "idx", idx, "value", value);
+                return false;
+            }
+            return reply.get().endsWith(chip.validReplySuffixSet);
+        });
+    }
 }
