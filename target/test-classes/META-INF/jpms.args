@@ -1,0 +1,4 @@
+--patch-module
+com.tugalsan.api.serialcom=_
+--add-reads
+com.tugalsan.api.serialcom=ALL-UNNAMED
