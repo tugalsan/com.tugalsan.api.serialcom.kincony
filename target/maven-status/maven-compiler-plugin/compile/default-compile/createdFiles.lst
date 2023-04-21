@@ -1,11 +1,7 @@
-com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\TS_SerialComKinConyKC868_A32_R1_2_DigitialIn.class
-com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.class
-com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\TS_SerialComKinConyKC868_A32_R1_2_DigitialOut.class
-com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\TS_SerialComKinConyKC868_A32_R1_2$1.class
-com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode.class
+com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\core\TS_SerialComKinConyKC868_A32_R1_2_Chip.class
+com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\core\TS_SerialComKinConyKC868_A32_R1_2_Chip$1.class
+com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\core\TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.class
+com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\core\TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode.class
 com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\TS_SerialComKinConyKC868_A32_R1_2.class
 module-info.class
-com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\TS_SerialComKinConyKC868_A32_R1_2_DigitialInPin.class
-com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\TS_SerialComKinConyKC868_A32_R1_2_DigitialOutPin.class
-com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\TS_SerialComKinConyKC868_A32_R1_2_MemInt.class
-com\tugalsan\api\serialcom\kincony\server\TS_SerialComKinConyTest.class
+com\tugalsan\api\serialcom\kincony\server\KC868_A32_R1_2\TS_SerialComKinConyKC868_A32_R1_2_Test.class

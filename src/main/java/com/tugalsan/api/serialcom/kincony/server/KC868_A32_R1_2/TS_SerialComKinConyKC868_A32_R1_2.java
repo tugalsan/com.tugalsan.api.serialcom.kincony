@@ -1,5 +1,6 @@
 package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2;
 
+import com.tugalsan.api.callable.client.TGS_CallableType1;
 import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialComKinConyKC868_A32_R1_2_Chip;

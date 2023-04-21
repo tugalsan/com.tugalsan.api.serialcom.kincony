@@ -1,15 +1,10 @@
 package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
-import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder;
 import com.tugalsan.api.callable.client.TGS_CallableType1;
-import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.serialcom.server.TS_SerialComBuilder;
 import com.tugalsan.api.serialcom.server.TS_SerialComMessageBroker;
-import com.tugalsan.api.stream.client.TGS_StreamUtils;
-import com.tugalsan.api.string.server.TS_StringUtils;
 import java.time.Duration;
-import java.util.List;
 import java.util.Optional;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
