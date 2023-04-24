@@ -2,8 +2,7 @@ package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
     /*
-    
-  //------------------------------------ TODO -----------------------------------------------------------------------
+    //------------------------------------ TODO -----------------------------------------------------------------------
 //A BIG MEM FOR SNIFFING WHAT IS GOING ON
 bool onlyBath0 = false;
 //TEST SURFACE TREATMENT BATH CODE
@@ -241,7 +240,6 @@ private:
   bool __fetchDI(int pin);  //RUN ONCE EVERY LOOP!
   bool __fetchDO(int pin);  //RUN ONCE EVERY LOOP!
   unsigned long _oscillateStart[32];
-  bool _oscillateSet(int pin, int secDuration, int secGap, int count, unsigned long currentTime);
   bool _oscillateReset(int pin);
   int _oscillateDuration[32];
   int _oscillateGap[32];
@@ -670,10 +668,10 @@ void TA_SerialCommandHandler::loop(unsigned long currentTime) {
     mem_int[i] = chip.getDI(i);
   }
   for (int i = TA_SerialCommandHandler_MEM_INT_DI_COUNT; i < TA_SerialCommandHandler_MEM_INT_DI_COUNT + TA_SerialCommandHandler_MEM_INT_DO_COUNT; i++) {
-    mem_int[i] = chip.getDO(i);
+    mem_int[i] = chip.getDO(i - TA_SerialCommandHandler_MEM_INT_DI_COUNT);
   }
   for (int i = TA_SerialCommandHandler_MEM_INT_DI_COUNT + TA_SerialCommandHandler_MEM_INT_DO_COUNT; i < TA_SerialCommandHandler_MEM_INT_DI_COUNT + TA_SerialCommandHandler_MEM_INT_DO_COUNT * 2; i++) {
-    mem_int[i] = chip.oscillateIs(i) ? 1 : 0;
+    mem_int[i] = chip.oscillateIs(i - TA_SerialCommandHandler_MEM_INT_DI_COUNT - TA_SerialCommandHandler_MEM_INT_DO_COUNT) ? 1 : 0;
   }
 }
 bool TA_SerialCommandHandler::_IfCommand_MemIntSetAll(String command, String cmdName, String values) {
@@ -687,18 +685,20 @@ bool TA_SerialCommandHandler::_IfCommand_MemIntSetAll(String command, String cmd
     if (value == 0) {
       Serial.print(F("ERROR_VAL_0_NOT_VALID: "));
       Serial.println(command);
-      return false;
+      return true;
     }
     i++;
   }
   if (i != TA_SerialCommandHandler_MEM_INT_TIMER_COUNT) {
     Serial.print(F("ERROR_VAL_SIZE_NOT_VALID: "));
     Serial.println(command);
-    return false;
+    return true;
   }
   TA_StringTokenizer tokensAll(values, "-");
+  i = 0;
   while (tokensAll.hasNext()) {
     mem_int[TA_SerialCommandHandler_MEM_INT_DI_COUNT + TA_SerialCommandHandler_MEM_INT_DO_COUNT * 2 + i] = tokensAll.nextToken().toInt();
+    i++;
   }
   Serial.print(F("REPLY_OF:"));
   Serial.print(command);
@@ -712,7 +712,7 @@ bool TA_SerialCommandHandler::_IfCommand_MemIntSetIdx(String command, String cmd
   Serial.print(F("REPLY_OF:"));
   Serial.print(command);
   Serial.println(F("->DONE"));
-  mem_int[idx] = value;
+  mem_int[TA_SerialCommandHandler_MEM_INT_DI_COUNT + TA_SerialCommandHandler_MEM_INT_DO_COUNT * 2 + idx] = value;
   return true;
 }
 bool TA_SerialCommandHandler::_IfCommand_DOSetIdxTrueUntil(String command, String cmdName, int pin, int duration, int gap, int count, unsigned long currentTime) {
