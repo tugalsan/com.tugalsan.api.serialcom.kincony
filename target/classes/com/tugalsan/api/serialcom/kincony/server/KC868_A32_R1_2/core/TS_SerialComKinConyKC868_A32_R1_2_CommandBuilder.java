@@ -81,6 +81,6 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
     }
 
     public static String setMemInt_All(List<Integer> values16) {
-        return "!MEMINT_SET_IDX %s".formatted(values16.stream().map(i -> i.toString()).collect(Collectors.joining("-")));
+        return "!MEMINT_SET_ALL %s".formatted(values16.stream().map(i -> i.toString()).collect(Collectors.joining("-")));
     }
 }

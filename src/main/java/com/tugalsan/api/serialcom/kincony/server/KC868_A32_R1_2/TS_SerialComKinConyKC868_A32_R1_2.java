@@ -160,7 +160,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMemInt_All(values16);
             var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
-                d.ce("memInt_setIdx", "ERROR_REPLY_EMPTY", "values", values16);
+                d.ce("memInt_setAll", "ERROR_REPLY_EMPTY", "values", values16);
                 return false;
             }
             return reply.get().endsWith(chip.validReplySuffixSet);
