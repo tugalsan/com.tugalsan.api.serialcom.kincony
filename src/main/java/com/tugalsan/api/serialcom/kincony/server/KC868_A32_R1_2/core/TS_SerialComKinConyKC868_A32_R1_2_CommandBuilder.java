@@ -1,6 +1,8 @@
 package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
 
@@ -76,5 +78,9 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
 
     public static String setMemInt_Idx(int idx, int value) {
         return "!MEMINT_SET_IDX %d %d".formatted(idx, value);
+    }
+
+    public static String setMemInt_All(List<Integer> values16) {
+        return "!MEMINT_SET_IDX %s".formatted(values16.stream().map(i -> i.toString()).collect(Collectors.joining("-")));
     }
 }

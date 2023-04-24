@@ -1,6 +1,5 @@
 package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2;
 
-import com.tugalsan.api.callable.client.TGS_CallableType1;
 import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialComKinConyKC868_A32_R1_2_Chip;
@@ -150,6 +149,18 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
             var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("memInt_setIdx", "ERROR_REPLY_EMPTY", "idx", idx, "value", value);
+                return false;
+            }
+            return reply.get().endsWith(chip.validReplySuffixSet);
+        });
+    }
+
+    public static boolean memInt_setAll(List<Integer> values16) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMemInt_All(values16);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("memInt_setIdx", "ERROR_REPLY_EMPTY", "values", values16);
                 return false;
             }
             return reply.get().endsWith(chip.validReplySuffixSet);
