@@ -47,7 +47,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
 
     public static <T> Optional<T> callOptional(TGS_CallableType1<Optional<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip, Duration timeout) {
         var result = new Object() {
-            Optional<T> value;
+            Optional<T> value = Optional.empty();
         };
         TS_SerialComBuilder.portFirst()
                 .baudRate_115200().dataBits_8().oneStopBit().parityNone()
