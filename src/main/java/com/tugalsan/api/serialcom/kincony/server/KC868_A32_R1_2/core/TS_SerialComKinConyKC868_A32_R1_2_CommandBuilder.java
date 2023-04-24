@@ -74,10 +74,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
         return "!MEMINT_GET_ALL";
     }
 
-    public static Optional<String> setMemInt_Idx(int idx, int secDuration) {
-        if (!isPinValid(idx)) {
-            return Optional.empty();
-        }
-        return Optional.of("!MEMINT_SET_IDX %d %d".formatted(idx, secDuration));
+    public static String setMemInt_Idx(int idx, int value) {
+        return "MEMINT_SET_IDX %d %d".formatted(idx, value);
     }
 }

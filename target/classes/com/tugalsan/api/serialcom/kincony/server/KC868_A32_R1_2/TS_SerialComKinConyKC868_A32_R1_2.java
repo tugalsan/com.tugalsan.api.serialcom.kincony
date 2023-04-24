@@ -147,11 +147,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
     public static boolean memInt_setIdx(int idx, int value) {
         return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMemInt_Idx(idx, value);
-            if (cmd.isEmpty()) {
-                d.ce("memInt_setIdx", "ERROR_CMD_EMPTY", "idx", idx, "value", value);
-                return false;
-            }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("memInt_setIdx", "ERROR_REPLY_EMPTY", "idx", idx, "value", value);
                 return false;
