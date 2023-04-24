@@ -75,6 +75,6 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
     }
 
     public static String setMemInt_Idx(int idx, int value) {
-        return "MEMINT_SET_IDX %d %d".formatted(idx, value);
+        return "!MEMINT_SET_IDX %d %d".formatted(idx, value);
     }
 }
