@@ -2,11 +2,7 @@ package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
     /*
-    //------------------------------------ TODO -----------------------------------------------------------------------
-//A BIG MEM FOR SNIFFING WHAT IS GOING ON
-//TEST SURFACE TREATMENT BATH CODE
-
-//------------------------------------ WARNING -----------------------------------------------------------------------
+  //------------------------------------ WARNING -----------------------------------------------------------------------
 //FOR BOARD KinCony_KC868_A32_R1_2 PIN 1 is called pin 0 here for ease of array usage
 
 //------------------------------------ DEFINE -----------------------------------------------------------------------
@@ -24,8 +20,8 @@ public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
 // DI + DO + DO_OSCILATOR_COUNT + TIMER
 #define INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2 false
 
-#define TA_SurfaceTreatmentBath16_TIMER_DEFAULT_VALUE 5
-#define INFO_TA_SurfaceTreatmentBath16 true
+#define TA_SurfaceTreatmentBath_TIMER_DEFAULT_VALUE 5
+#define INFO_TA_SurfaceTreatmentBath true
 
 //------------------------------------ STRING HANDLER -----------------------------------------------------------------------
 
@@ -683,14 +679,17 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::loop(unsigned long currentTime) {
     _forEachToken(serialHandler.nextLine(), currentTime);
   }
   //MEM_INT LOAD
+  int mem_int_offset = 0;
   for (int i = 0; i < TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT; i++) {
-    mem_int[i] = chipHandler.getDI(i);
+    mem_int[mem_int_offset + i] = chipHandler.getDI(i);
   }
-  for (int i = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT; i < TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT; i++) {
-    mem_int[i] = chipHandler.getDO(i - TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT);
+  mem_int_offset = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT;
+  for (int i = mem_int_offset; i < TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT; i++) {
+    mem_int[mem_int_offset + i] = chipHandler.getDO(i);
   }
-  for (int i = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT; i < TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2; i++) {
-    mem_int[i] = chipHandler.oscillateIs(i - TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT - TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT) ? 1 : 0;
+  mem_int_offset = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT;
+  for (int i = mem_int_offset; i < TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT; i++) {
+    mem_int[mem_int_offset + i] = chipHandler.oscillateIs(i) ? 1 : 0;
   }
 }
 bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetAll(String command, String cmdName, String values) {
@@ -715,8 +714,9 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetAll(String co
   }
   TA_StringTokenizer tokensAll(values, "-");
   i = 0;
+  int mem_int_offset = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2;
   while (tokensAll.hasNext()) {
-    mem_int[TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2 + i] = tokensAll.nextToken().toInt();
+    mem_int[mem_int_offset + i] = tokensAll.nextToken().toInt();
     i++;
   }
   Serial.print(F("REPLY_OF:"));
@@ -731,7 +731,8 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetIdx(String co
   Serial.print(F("REPLY_OF:"));
   Serial.print(command);
   Serial.println(F("->DONE"));
-  mem_int[TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2 + idx] = value;
+  int mem_int_offset = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2;
+  mem_int[mem_int_offset + idx] = value;
   return true;
 }
 bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_DOSetIdxTrueUntil(String command, String cmdName, int pin, int duration, int gap, int count, unsigned long currentTime) {
@@ -990,9 +991,9 @@ TA_CommandHandler_KinCony_KC868_A32_R1_2 commandHandler;
 //DI 2, 4, 6...32: manual start(with timer)/stop(stop the alarm)
 //DO 1, 3, 5...31: timer is running
 //DO 2, 4, 6...32: alarm until [stop triggered] or [sth not in the bath anymore]
-class TA_SurfaceTreatmentBath16 {
+class TA_SurfaceTreatmentBath {
 public:
-  TA_SurfaceTreatmentBath16();
+  TA_SurfaceTreatmentBath();
   void loop(unsigned long currentTime);
 private:
   enum STATE {
@@ -1002,17 +1003,19 @@ private:
     ALARM_RUNNING_BY_SENSOR,
     STOPPED
   };
-  unsigned long _startTime[16];
-  STATE _state[16];
+  unsigned long _startTime[TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT];
+  STATE _state[TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT];
 };
-TA_SurfaceTreatmentBath16::TA_SurfaceTreatmentBath16() {
-  for (int bath = 0 + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2; bath < TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2 + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT; bath++) {
-    _state[bath] = STOPPED;
-    commandHandler.mem_int[bath] = TA_SurfaceTreatmentBath16_TIMER_DEFAULT_VALUE;
+TA_SurfaceTreatmentBath::TA_SurfaceTreatmentBath() {
+  int mem_int_offset = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2;
+  for (int i = 0; i < TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT; i++) {
+    _state[i] = STOPPED;
+    commandHandler.mem_int[mem_int_offset + i] = TA_SurfaceTreatmentBath_TIMER_DEFAULT_VALUE;
   }
 }
-void TA_SurfaceTreatmentBath16::loop(unsigned long currentTime) {
-  for (int i = 0; i < 1; i += 2) {
+void TA_SurfaceTreatmentBath::loop(unsigned long currentTime) {
+  int mem_int_offset = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2;
+  for (int i = 0; i < TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT; i += 2) {
     int bath = i / 2;
     int pin = i;       //ON PROCESS SENSOR AND LIGHT
     int pin2 = i + 1;  //START STOP BUTTON AND ALARM
@@ -1024,7 +1027,7 @@ void TA_SurfaceTreatmentBath16::loop(unsigned long currentTime) {
     bool sensorActive = sensorActivePrev && sensorActivePrev;
     bool buttonReleased = buttonActivePrev && !buttonActiveCur;
     bool onProcessOrSensorActive = _state[bath] == TIMER_RUNNING_BY_BUTTON || _state[bath] == TIMER_RUNNING_BY_SENSOR || _state[bath] == ALARM_RUNNING_BY_BUTTON;
-    if (INFO_TA_SurfaceTreatmentBath16) {
+    if (INFO_TA_SurfaceTreatmentBath && i == 0) {
       Serial.print("sap:");
       Serial.print(sensorActivePrev);
       Serial.print(", sac:");
@@ -1040,6 +1043,9 @@ void TA_SurfaceTreatmentBath16::loop(unsigned long currentTime) {
       Serial.print(", op|sa:");
       Serial.print(onProcessOrSensorActive);
       Serial.print(", st:");
+      Serial.print(onProcessOrSensorActive);
+      Serial.print(", bt[0]:");
+      Serial.print(commandHandler.mem_int[mem_int_offset + bath]);
       if (_state[bath] == STOPPED) {
         Serial.println("STOPPED");
       } else if (_state[bath] == TIMER_RUNNING_BY_BUTTON) {
@@ -1059,53 +1065,61 @@ void TA_SurfaceTreatmentBath16::loop(unsigned long currentTime) {
     //STOPPED->TIMER_RUNNING
     if (_state[bath] == STOPPED) {
       if (buttonReleased) {
-        if (INFO_TA_SurfaceTreatmentBath16) Serial.println("STOPPED.buttonReleased->TIMER_RUNNING_BY_BUTTON");
+        if (INFO_TA_SurfaceTreatmentBath) Serial.println("STOPPED.buttonReleased->TIMER_RUNNING_BY_BUTTON");
         _startTime[bath] = currentTime;
         _state[bath] = TIMER_RUNNING_BY_BUTTON;
         continue;
-      } else if (sensorActive) {
-        if (INFO_TA_SurfaceTreatmentBath16) Serial.println("STOPPED.buttonReleased->TIMER_RUNNING_BY_SENSOR");
+      }
+      if (sensorActive) {
+        if (INFO_TA_SurfaceTreatmentBath) Serial.println("STOPPED.buttonReleased->TIMER_RUNNING_BY_SENSOR");
         _startTime[bath] = currentTime;
         _state[bath] = TIMER_RUNNING_BY_SENSOR;
         continue;
       }
-      continue;
+      {
+        continue;
+      }
     }
     //TIMER_RUNNING.currentTime?.STOP|NOT_YET|ALARM
     if (_state[bath] == TIMER_RUNNING_BY_BUTTON || _state[bath] == TIMER_RUNNING_BY_SENSOR) {
       if (_state[bath] == TIMER_RUNNING_BY_SENSOR && !sensorActive) {
-        if (INFO_TA_SurfaceTreatmentBath16) Serial.println("TIMER_RUNNING_BY_SENSOR.!sensorActive->STOPPED");
+        if (INFO_TA_SurfaceTreatmentBath) Serial.println("TIMER_RUNNING_BY_SENSOR.!sensorActive->STOPPED");
         chipHandler.setDO(pin2, false);
         _state[bath] = STOPPED;
         continue;
-      } else if (_state[bath] == TIMER_RUNNING_BY_BUTTON && buttonReleased) {
-        if (INFO_TA_SurfaceTreatmentBath16) Serial.println("TIMER_RUNNING_BY_BUTTON.buttonReleased->STOPPED");
+      }
+      if (_state[bath] == TIMER_RUNNING_BY_BUTTON && buttonReleased) {
+        if (INFO_TA_SurfaceTreatmentBath) Serial.println("TIMER_RUNNING_BY_BUTTON.buttonReleased->STOPPED");
         chipHandler.setDO(pin2, false);
         _state[bath] = STOPPED;
         continue;
-      } else if ((_startTime[bath] + commandHandler.mem_int[bath] * 1000) > currentTime) {  //NOT_YET
-        if (INFO_TA_SurfaceTreatmentBath16) Serial.println("TIMER_RUNNING.x>currentTime->NOT_YET");
+      }
+      if ((_startTime[bath] + commandHandler.mem_int[mem_int_offset + bath] * 1000) > currentTime) {  //NOT_YET
+        if (INFO_TA_SurfaceTreatmentBath) Serial.println("TIMER_RUNNING.x>currentTime->NOT_YET");
         continue;
-      } else {
-        if (INFO_TA_SurfaceTreatmentBath16) Serial.println("TIMER_RUNNING.x<=currentTime->ALARM");
+      }
+      {
+        if (INFO_TA_SurfaceTreatmentBath) Serial.println("TIMER_RUNNING.x<=currentTime->ALARM");
         _state[bath] = _state[bath] == TIMER_RUNNING_BY_BUTTON ? ALARM_RUNNING_BY_BUTTON : ALARM_RUNNING_BY_SENSOR;
         continue;
       }
     }
     //ALARM->STOP|RING
     if (_state[bath] == ALARM_RUNNING_BY_SENSOR || _state[bath] == ALARM_RUNNING_BY_BUTTON) {
+      if (_state[bath] == ALARM_RUNNING_BY_BUTTON && buttonReleased) {
+        if (INFO_TA_SurfaceTreatmentBath) Serial.println("ALARM.buttonReleased->STOPPED");
+        chipHandler.setDO(pin2, false);
+        _state[bath] = STOPPED;
+        continue;
+      }
       if (_state[bath] == ALARM_RUNNING_BY_SENSOR && !sensorActive) {
-        if (INFO_TA_SurfaceTreatmentBath16) Serial.println("ALARM.!sensorActive->STOPPED");
+        if (INFO_TA_SurfaceTreatmentBath) Serial.println("ALARM.!sensorActive->STOPPED");
         chipHandler.setDO(pin2, false);
         _state[bath] = STOPPED;
         continue;
-      } else if (_state[bath] == ALARM_RUNNING_BY_BUTTON && buttonReleased) {
-        if (INFO_TA_SurfaceTreatmentBath16) Serial.println("ALARM.buttonReleased->STOPPED");
-        chipHandler.setDO(pin2, false);
-        _state[bath] = STOPPED;
-        continue;
-      } else {
-        if (INFO_TA_SurfaceTreatmentBath16) {
+      }
+      {
+        if (INFO_TA_SurfaceTreatmentBath) {
           Serial.print("ALARM.RINGER:");
           Serial.println(_state[bath] == ALARM_RUNNING_BY_BUTTON ? "ALARM_RUNNING_BY_BUTTON" : "ALARM_RUNNING_BY_SENSOR");
         }
@@ -1116,7 +1130,7 @@ void TA_SurfaceTreatmentBath16::loop(unsigned long currentTime) {
     }
   }
 }
-TA_SurfaceTreatmentBath16 surfaceTreatmentBath16;
+TA_SurfaceTreatmentBath surfaceTreatmentBath16;
 
 //------------------------------------ PROGRAM -----------------------------------------------------------------------
 
@@ -1127,7 +1141,7 @@ TA_SurfaceTreatmentBath16 surfaceTreatmentBath16;
 //TA_SerialHandler serialHandler;
 //TA_ChipHandler_KinCony_KC868_A32_R1_2 chipHandler;
 //TA_CommandHandler_KinCony_KC868_A32_R1_2 commandHandler;
-//TA_SurfaceTreatmentBath16 surfaceTreatmentBath16;
+//TA_SurfaceTreatmentBath surfaceTreatmentBath16;
 
 //ARDUINO_MAIN
 void setup() {
