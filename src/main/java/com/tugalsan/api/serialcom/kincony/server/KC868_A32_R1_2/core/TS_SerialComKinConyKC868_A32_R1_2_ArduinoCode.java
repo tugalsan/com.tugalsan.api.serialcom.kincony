@@ -2,7 +2,7 @@ package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
     /*
- //------------------------------------ WARNING -----------------------------------------------------------------------
+//------------------------------------ WARNING -----------------------------------------------------------------------
 //FOR BOARD KinCony_KC868_A32_R1_2 PIN 1 is called pin 0 here for ease of array usage
 
 //------------------------------------ DEFINE -----------------------------------------------------------------------
@@ -716,7 +716,8 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetAll(String co
   i = 0;
   int mem_int_offset = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2;
   while (tokensAll.hasNext()) {
-    mem_int[mem_int_offset + i] = tokensAll.nextToken().toInt();
+    int val = tokensAll.nextToken().toInt();
+    if (val < 0) mem_int[mem_int_offset + i] = val;
     i++;
   }
   Serial.print(F("REPLY_OF:"));
@@ -1160,6 +1161,7 @@ void loop() {
   commandHandler.loop(curTime);
   surfaceTreatmentBath16.loop(curTime);
 }
+
 
 
      */
