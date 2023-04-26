@@ -2,7 +2,7 @@ package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
     /*
-  //------------------------------------ WARNING -----------------------------------------------------------------------
+ //------------------------------------ WARNING -----------------------------------------------------------------------
 //FOR BOARD KinCony_KC868_A32_R1_2 PIN 1 is called pin 0 here for ease of array usage
 
 //------------------------------------ DEFINE -----------------------------------------------------------------------
@@ -21,7 +21,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
 #define INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2 false
 
 #define TA_SurfaceTreatmentBath_TIMER_DEFAULT_VALUE 5
-#define INFO_TA_SurfaceTreatmentBath true
+#define INFO_TA_SurfaceTreatmentBath false
 
 //------------------------------------ STRING HANDLER -----------------------------------------------------------------------
 
