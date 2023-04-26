@@ -699,12 +699,6 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetAll(String co
   TA_StringTokenizer tokensAll2(values, "-");
   int i = 0;
   while (tokensAll2.hasNext()) {
-    int value = tokensAll2.nextToken().toInt();
-    if (value == 0) {
-      Serial.print(F("ERROR_VAL_0_NOT_VALID: "));
-      Serial.println(command);
-      return true;
-    }
     i++;
   }
   if (i != TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT) {
@@ -717,7 +711,7 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetAll(String co
   int mem_int_offset = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2;
   while (tokensAll.hasNext()) {
     int val = tokensAll.nextToken().toInt();
-    if (val < 0) mem_int[mem_int_offset + i] = val;
+    if (val == 0) mem_int[mem_int_offset + i] = val;
     i++;
   }
   Serial.print(F("REPLY_OF:"));
@@ -1161,8 +1155,6 @@ void loop() {
   commandHandler.loop(curTime);
   surfaceTreatmentBath16.loop(curTime);
 }
-
-
 
      */
 }
