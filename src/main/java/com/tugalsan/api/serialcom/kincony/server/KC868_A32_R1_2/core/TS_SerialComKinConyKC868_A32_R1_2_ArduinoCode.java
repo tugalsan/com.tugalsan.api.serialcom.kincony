@@ -8,7 +8,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
 //------------------------------------ DEFINE -----------------------------------------------------------------------
 #define TA_SerialHandler_WAIT_UNTIL_CONNECTION false  //IF TRUE; WAITS FOR 3 SECONDS
 #define TA_SerialHandler_WAIT_IN_BAUDRATE 115200
-#define TA_SerialHandler_BUFFER_SIZE 60
+#define TA_SerialHandler_BUFFER_SIZE 256
 
 #define TA_ChipHandler_KinCony_KC868_A32_R1_2_LOOP_DELAY_MS 20    //critical for digital input noise
 #define TA_ChipHandler_KinCony_KC868_A32_R1_2_BUTTON_LIFE_MS 200  //critical for digital button
