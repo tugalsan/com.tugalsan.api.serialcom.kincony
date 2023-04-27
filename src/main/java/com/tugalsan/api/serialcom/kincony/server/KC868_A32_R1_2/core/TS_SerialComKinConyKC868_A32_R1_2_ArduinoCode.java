@@ -25,16 +25,21 @@ public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
 
 //------------------------------------ STRING HANDLER -----------------------------------------------------------------------
 
-//USAGE: stringHandler.isInt("ad") -> true/false
+//USAGE: stringHandler.isNumber("ad") -> true/false, stringHandler.toNumber("12")
 class TA_StringHandler {
 public:
   TA_StringHandler();
-  bool isInt(String st);
+  bool isNumber(String st);
+  unsigned long toNumber(String st);
+  unsigned long MAX_NUMBER = 2147483647;
 private:
 };
 TA_StringHandler::TA_StringHandler() {
 }
-bool TA_StringHandler::isInt(String str) {
+unsigned long TA_StringHandler::toNumber(String st) {
+  return strtoul(st.c_str(), NULL, 10);
+}
+bool TA_StringHandler::isNumber(String str) {
   for (byte i = 0; i < str.length(); i++) {
     if (isDigit(str.charAt(i))) return true;
   }
@@ -220,16 +225,16 @@ public:
   bool getButtonCurrent(int pin);
   bool getButtonPrevious(int pin);
   bool oscillateIs(int pin);
-  bool oscillateSet(int pin, int secDuration, int secGap, int count, unsigned long currentTime);
+  bool oscillateSet(int pin, unsigned long secDuration, unsigned long secGap, unsigned long count, unsigned long currentTime);
 private:
   bool _setDO(int pin, bool value);
   bool __fetchDI(int pin);  //RUN ONCE EVERY LOOP!
   bool __fetchDO(int pin);  //RUN ONCE EVERY LOOP!
   unsigned long _oscillateStart[32];
   bool _oscillateReset(int pin);
-  int _oscillateDuration[32];
-  int _oscillateGap[32];
-  int _oscillateCount[32];
+  unsigned long _oscillateDuration[32];
+  unsigned long _oscillateGap[32];
+  unsigned long _oscillateCount[32];
   bool _DIButtonValuePrevious[32];
   bool _DIButtonValueCurrent[32];
   bool _DIButtonTimeCurrent[32];
@@ -263,7 +268,7 @@ bool TA_ChipHandler_KinCony_KC868_A32_R1_2::_oscillateReset(int pin) {
   _oscillateCount[pin] = 0;
   return true;
 }
-bool TA_ChipHandler_KinCony_KC868_A32_R1_2::oscillateSet(int pin, int secDuration, int secGap, int count, unsigned long currentTime) {
+bool TA_ChipHandler_KinCony_KC868_A32_R1_2::oscillateSet(int pin, unsigned long secDuration, unsigned long secGap, unsigned long count, unsigned long currentTime) {
   if (!isPinValid(pin)) {
     return false;
   }
@@ -646,7 +651,7 @@ public:
   void setup();
   void loop(unsigned long currentTime);
   void setup_testMemGetAll();
-  int mem_int[TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2 + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT];
+  unsigned long mem_int[TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2 + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT];
 private:
   bool _setup_testMemGetAll = false;
   void _forEachToken(String command, unsigned long currentTime);
@@ -663,9 +668,9 @@ private:
   bool _IfCommand_DOSetIdxTrue(String command, String cmdName, int pin);
   bool _IfCommand_DOSetIdxFalse(String command, String cmdName, int pin);
   bool _isNotValidInt(String command, String integerName, String errorLabel);
-  bool _IfCommand_MemIntSetIdx(String command, String cmdName, int idx, int value);
+  bool _IfCommand_MemIntSetIdx(String command, String cmdName, int idx, unsigned long value);
   bool _IfCommand_MemIntSetAll(String command, String cmdName, String values);
-  bool _IfCommand_DOSetIdxTrueUntil(String command, String cmdName, int pin, int duration, int gap, int count, unsigned long currentTime);
+  bool _IfCommand_DOSetIdxTrueUntil(String command, String cmdName, int pin, unsigned long duration, unsigned long gap, unsigned long count, unsigned long currentTime);
   void _error(String command, String errorLabel);
 };
 TA_CommandHandler_KinCony_KC868_A32_R1_2::TA_CommandHandler_KinCony_KC868_A32_R1_2() {
@@ -699,6 +704,7 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetAll(String co
   TA_StringTokenizer tokensAll2(values, "-");
   int i = 0;
   while (tokensAll2.hasNext()) {
+    tokensAll2.nextToken();
     i++;
   }
   if (i != TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT) {
@@ -710,7 +716,7 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetAll(String co
   i = 0;
   int mem_int_offset = TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2;
   while (tokensAll.hasNext()) {
-    int val = tokensAll.nextToken().toInt();
+    unsigned long val = stringHandler.toNumber(tokensAll.nextToken());
     if (val == 0) mem_int[mem_int_offset + i] = val;
     i++;
   }
@@ -719,7 +725,7 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetAll(String co
   Serial.println(F("->DONE"));
   return true;
 }
-bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetIdx(String command, String cmdName, int idx, int value) {
+bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetIdx(String command, String cmdName, int idx, unsigned long value) {
   if (!cmdName.equals("!MEMINT_SET_IDX")) {
     return false;
   }
@@ -730,7 +736,7 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetIdx(String co
   mem_int[mem_int_offset + idx] = value;
   return true;
 }
-bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_DOSetIdxTrueUntil(String command, String cmdName, int pin, int duration, int gap, int count, unsigned long currentTime) {
+bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_DOSetIdxTrueUntil(String command, String cmdName, int pin, unsigned long duration, unsigned long gap, unsigned long count, unsigned long currentTime) {
   if (!cmdName.equals("!DO_SET_IDX_TRUE_UNTIL")) {
     return false;
   }
@@ -740,7 +746,7 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_DOSetIdxTrueUntil(Stri
   return chipHandler.oscillateSet(pin, duration, gap, count, currentTime);
 }
 bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_isNotValidInt(String command, String integerName, String errorLabel) {
-  if (!stringHandler.isInt(integerName)) {
+  if (!stringHandler.isNumber(integerName)) {
     Serial.print(errorLabel);
     Serial.print(F(": "));
     Serial.println(command);
@@ -940,7 +946,7 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, uns
   if (_IfThereIsNoNextToken(tokens, command, F("ERROR_CMD_PIN_NAME_UNCOMPLETE"))) return;
   String pinOrIdxName = tokens.nextToken();
   if (_IfCommand_MemIntSetAll(command, cmdName, pinOrIdxName)) return;
-  int pinOrIdx = pinOrIdxName.toInt();
+  unsigned long pinOrIdx = stringHandler.toNumber(pinOrIdxName);
   if (INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2) {
     Serial.print("INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2:pinOrIdx:");
     Serial.println(pinOrIdx);
@@ -952,7 +958,7 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, uns
   if (_IfThereIsNoNextToken(tokens, command, F("ERROR_CMD_DURATION_NAME_UNCOMPLETE"))) return;
   String durationName = tokens.nextToken();
   if (_isNotValidInt(command, durationName, F("ERROR_CMD_DURATION_NAME_NOT_INT"))) return;
-  int duration = durationName.toInt();
+  unsigned long duration = stringHandler.toNumber(durationName);
   if (INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2) {
     Serial.print("INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2:duration:");
     Serial.println(duration);
@@ -961,7 +967,7 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, uns
   if (_IfThereIsNoNextToken(tokens, command, F("ERROR_CMD_GAP_NAME_UNCOMPLETE"))) return;
   String gapName = tokens.nextToken();
   if (_isNotValidInt(command, gapName, F("ERROR_CMD_GAP_NAME_NOT_INT"))) return;
-  int gap = gapName.toInt();
+  unsigned long gap = stringHandler.toNumber(gapName);
   if (INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2) {
     Serial.print("INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2:gap:");
     Serial.println(gap);
@@ -969,7 +975,7 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, uns
   if (_IfThereIsNoNextToken(tokens, command, F("ERROR_CMD_COUNT_NAME_UNCOMPLETE"))) return;
   String countName = tokens.nextToken();
   if (_isNotValidInt(command, countName, F("ERROR_CMD_COUNT_NAME_NOT_INT"))) return;
-  int count = countName.toInt();
+  unsigned long count = stringHandler.toNumber(countName);
   if (INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2) {
     Serial.print("INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2:count:");
     Serial.println(count);
