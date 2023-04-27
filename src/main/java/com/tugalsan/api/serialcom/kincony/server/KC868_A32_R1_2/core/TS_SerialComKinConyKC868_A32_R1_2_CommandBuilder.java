@@ -1,10 +1,13 @@
 package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
+import com.tugalsan.api.log.server.TS_Log;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
+
+    final private static TS_Log d = TS_Log.of(TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.class);
 
     public static boolean isPinValid(int pin) {
         return pin >= 0 && pin < 32;
@@ -66,6 +69,18 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
         if (!isPinValid(pin)) {
             return Optional.empty();
         }
+        if (secDuration > MAX_VALUE) {
+            d.ce("setDigitalOut_Oscillating", "ERROR_MAX_VALUE_THRESHOLD", "secDuration", secDuration);
+            return null;
+        }
+        if (secDuration > secGap) {
+            d.ce("setDigitalOut_Oscillating", "ERROR_MAX_VALUE_THRESHOLD", "secGap", secGap);
+            return null;
+        }
+        if (secDuration > count) {
+            d.ce("setDigitalOut_Oscillating", "ERROR_MAX_VALUE_THRESHOLD", "count", count);
+            return null;
+        }
         return Optional.of("!DO_SET_IDX_TRUE_UNTIL %d %d %d %d".formatted(pin, secDuration, secGap, count));
     }
 
@@ -77,10 +92,20 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
     }
 
     public static String setMemInt_Idx(int idx, int value) {
+        if (value > MAX_VALUE) {
+            d.ce("setMemInt_Idx", "ERROR_MAX_VALUE_THRESHOLD");
+            return null;
+        }
         return "!MEMINT_SET_IDX %d %d".formatted(idx, value);
     }
 
     public static String setMemInt_All(List<Integer> values16) {
+        if (values16.stream().filter(i -> i > MAX_VALUE).findAny().isPresent()) {
+            d.ce("setMemInt_All", "ERROR_MAX_VALUE_THRESHOLD");
+            return null;
+        }
         return "!MEMINT_SET_ALL %s".formatted(values16.stream().map(i -> i.toString()).collect(Collectors.joining("-")));
     }
+
+    final public static int MAX_VALUE = 2147483647;
 }
