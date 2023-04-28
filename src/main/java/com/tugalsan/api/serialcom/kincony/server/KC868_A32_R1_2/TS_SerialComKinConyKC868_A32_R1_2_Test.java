@@ -31,8 +31,9 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
                 System.out.print("choice: ");
                 var choiceStr = reader.readLine();
                 var choiceInt = TGS_CastUtils.toInteger(choiceStr);
+                var comX = "COM3";
                 if (choiceInt == null) {
-                    d.cr("test", "custom", choiceStr, TS_SerialComKinConyKC868_A32_R1_2_Chip.callStrOptional(chip -> {
+                    d.cr("test", "custom", choiceStr, TS_SerialComKinConyKC868_A32_R1_2_Chip.callStrOptional(comX, chip -> {
                         return chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(choiceStr, chip.timeout, chip.validReplyPrefix, true);
                     }));
                     continue;
@@ -81,56 +82,57 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
             boolean test_oscillate,
             boolean test_memory
     ) {
+        var comX = "COM3";
         if (debugEnable) {
             TS_SerialComMessageBroker.d.infoEnable = true;
         }
 
         //USAGE: GENERAL------------------------------------------
         if (test_chipname) {
-            d.cr("test", "chipName", TS_SerialComKinConyKC868_A32_R1_2.chipName());
+            d.cr("test", "chipName", TS_SerialComKinConyKC868_A32_R1_2.chipName(comX));
         }
 
         //USAGE: DIGITAL IN GET-----------------------------------
         if (test_digitalIn_getAll) {
-            d.cr("test", "digitalIn_getAll", TS_SerialComKinConyKC868_A32_R1_2.digitalIn_getAll());
+            d.cr("test", "digitalIn_getAll", TS_SerialComKinConyKC868_A32_R1_2.digitalIn_getAll(comX));
         }
         if (test_digitalIn_getIdx) {
             IntStream.range(0, 32).forEachOrdered(i -> {
-                d.cr("test", "digitalIn_getIdx(" + i + ")", TS_SerialComKinConyKC868_A32_R1_2.digitalIn_getIdx(i));
+                d.cr("test", "digitalIn_getIdx(" + i + ")", TS_SerialComKinConyKC868_A32_R1_2.digitalIn_getIdx(comX, i));
             });
         }
 
         //USAGE: DIGITAL OUT GET----------------------------------
         if (test_digitalOut_getAll) {
-            d.cr("test", "digitalOut_getAll", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_getAll());
+            d.cr("test", "digitalOut_getAll", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_getAll(comX));
         }
         if (test_digitalOut_getIdx) {
             IntStream.range(0, 32).forEachOrdered(i -> {
-                d.cr("test", "digitalOut_getIdx(" + i + ")", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_getIdx(i));
+                d.cr("test", "digitalOut_getIdx(" + i + ")", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_getIdx(comX, i));
             });
         }
         //USAGE: DIGITAL OUT SET----------------------------------
         if (test_digitalOut_setAll) {
-            d.cr("test", "digitalOut_setAll(true)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setAll(true));
-            d.cr("test", "digitalOut_setAll(false)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setAll(false));
+            d.cr("test", "digitalOut_setAll(true)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setAll(comX, true));
+            d.cr("test", "digitalOut_setAll(false)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setAll(comX, false));
         }
         if (test_digitalOut_setIdx) {
             IntStream.range(0, 32).forEachOrdered(i -> {
-                d.cr("test", "digitalOut_setIdx(" + i + ", true)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setIdx(i, true));
+                d.cr("test", "digitalOut_setIdx(" + i + ", true)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setIdx(comX, i, true));
             });
             IntStream.range(0, 32).forEachOrdered(i -> {
-                d.cr("test", "digitalOut_setIdx(" + i + ", false)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setIdx(i, false));
+                d.cr("test", "digitalOut_setIdx(" + i + ", false)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setIdx(comX, i, false));
             });
         }
         //USAGE: DIGITAL OUT OSCILLATE---------------------------
         if (test_oscillate) {
-            d.cr("test", "digitalOut_oscilate", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_oscilate(12, 1, 2, 5));
+            d.cr("test", "digitalOut_oscilate", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_oscilate(comX, 12, 1, 2, 5));
         }
 
         //USAGE: MEMORY-------------------------------------------
         if (test_memory) {
-            d.cr("test", "memInt_setIdx(1, 15)", TS_SerialComKinConyKC868_A32_R1_2.memInt_setIdx(1, 15));
-            d.cr("test", "memInt_getAll", TS_SerialComKinConyKC868_A32_R1_2.memInt_getAll());
+            d.cr("test", "memInt_setIdx(1, 15)", TS_SerialComKinConyKC868_A32_R1_2.memInt_setIdx(comX, 1, 15));
+            d.cr("test", "memInt_getAll", TS_SerialComKinConyKC868_A32_R1_2.memInt_getAll(comX));
         }
     }
 }
