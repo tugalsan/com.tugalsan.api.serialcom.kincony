@@ -652,8 +652,11 @@ public:
   void loop(unsigned long currentTime);
   void setup_testMemGetAll();
   unsigned long mem_int[TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2 + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT];
+  int mode;
 private:
   bool _setup_testMemGetAll = false;
+  bool _IfCommand_ModeSetIdx(String command, String cmdName, int idx);
+  bool _IfCommand_ModeGetIdx(String command, String cmdName);
   void _forEachToken(String command, unsigned long currentTime);
   bool _IfCommandNotValid(String command);
   bool _IfThereIsNoNextToken(TA_StringTokenizer tokens, String command, String errorLabel);
@@ -795,6 +798,17 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntGetAll(String co
   Serial.println(F(""));
   return true;
 }
+bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_ModeGetIdx(String command, String cmdName) {
+  if (!cmdName.equals("!MODE_GET_IDX")) {
+    return false;
+  }
+  Serial.print(F("REPLY_OF:"));
+  Serial.print(command);
+  Serial.print(F("->"));
+  Serial.print(mode);
+  Serial.println(F(""));
+  return true;
+}
 bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_DIGetAll(String command, String cmdName) {
   if (!cmdName.equals("!DI_GET_ALL")) {
     return false;
@@ -889,6 +903,16 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_DOSetIdxFalse(String c
   }
   return true;
 }
+bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_ModeSetIdx(String command, String cmdName, int idx) {
+  if (!cmdName.equals("!MODE_SET_IDX")) {
+    return false;
+  }
+  Serial.print(F("REPLY_OF:"));
+  Serial.print(command);
+  Serial.println(F("->DONE"));
+  mode = idx;
+  return true;
+}
 bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_DOSetIdxTrue(String command, String cmdName, int pin) {
   if (!cmdName.equals("!DO_SET_IDX_TRUE")) {
     return false;
@@ -907,6 +931,8 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::setup() {
   if (INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2) {
     Serial.println(F("USAGE: GENERAL------------------------------------------"));
     Serial.println(F("USAGE: getChipName as (cmd) ex: !CHIP_NAME"));
+    Serial.println(F("USAGE: modeSetIdx as (cmd idx) ex: !MODE_SET_IDX 1"));
+    Serial.println(F("USAGE: modeGetIdx as (cmd) ex: !MODE_GET_IDX"));
     Serial.println(F("USAGE: DIGITAL IN GET-----------------------------------"));
     Serial.println(F("USAGE: getDigitalInAll as (cmd) ex: !DI_GET_ALL"));
     Serial.println(F("USAGE: getDigitalInIdx as (cmd, pin1-32) ex: !DI_GET_IDX 1"));
@@ -924,6 +950,7 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::setup() {
     Serial.println(F("USAGE: getMemIntAll as (cmd) ex: !MEMINT_GET_ALL"));
     Serial.println(F("USAGE: setMemIntIdx as (cmd, idx, secDuration) ex: !MEMINT_SET_IDX 5 2"));
   }
+  mode = 0;
 }
 void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, unsigned long currentTime) {
   if (_IfCommandNotValid(command)) return;
@@ -939,6 +966,7 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, uns
     return;
   }
   if (_IfCommand_chipHandlerName(command, cmdName)) return;
+  if (_IfCommand_ModeGetIdx(command, cmdName)) return;  
   if (_IfCommand_DIGetAll(command, cmdName)) return;
   if (_IfCommand_DOGetAll(command, cmdName)) return;
   if (_IfCommand_DOSetAllTrue(command, cmdName)) return;
@@ -951,6 +979,7 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, uns
     Serial.print("INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2:pinOrIdx:");
     Serial.println(pinOrIdx);
   }
+  if (_IfCommand_ModeSetIdx(command, cmdName, pinOrIdx)) return;
   if (_IfCommand_DIGetIdx(command, cmdName, pinOrIdx)) return;
   if (_IfCommand_DOGetIdx(command, cmdName, pinOrIdx)) return;
   if (_IfCommand_DOSetIdxFalse(command, cmdName, pinOrIdx)) return;
@@ -1157,10 +1186,11 @@ void setup() {
 void loop() {
   unsigned long curTime = timeHandler.loop();
   chipHandler.loop(curTime);
-  //chipHandler.loop_testButtons();
   commandHandler.loop(curTime);
-  surfaceTreatmentBath16.loop(curTime);
+  if (commandHandler.mode == 0) chipHandler.loop_testButtons();
+  if (commandHandler.mode == 1) surfaceTreatmentBath16.loop(curTime);
 }
+
 
 
      */
