@@ -2,7 +2,6 @@ package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
     /*
-
 //------------------------------------ ARDUINO SETUP FOR KinCony_KC868_A32_R1_2-----------------------------------------------------------------------
 //IDE 2.1.0
 //File.Prefrences.sketchbook_location:C:\me\codes\arduino
@@ -27,16 +26,16 @@ public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
 #define TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT 16
 #define TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT 32
 #define TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT 32
-// DI + DO + DO_OSCILATOR_COUNT + TIMER
+//MEM_INT TOTAL_COUNT: DI + DO + DO_OSCILATOR + TIMER
 #define INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2 false
 
 #define TA_SurfaceTreatmentBath_TIMER_DEFAULT_VALUE 5
 #define INFO_TA_SurfaceTreatmentBath false
 
 
-//LIST
+//------------------------------------ LIST HANDLER -----------------------------------------------------------------------
 //https://www.tutorialspoint.com/linkedlist-in-arduino
-#include <LinkedList.h>
+#include <LinkedList.h> //USEFUL
 //Library Manager -> LinkedList by Ivan Seidel -> File.Examles.LikedList
 //LinkedList<int> myList = LinkedList<int>();
 //int listSize = myList.size();
@@ -241,7 +240,6 @@ public:
   TA_ChipHandler_KinCony_KC868_A32_R1_2();
   void setup();
   void loop(unsigned long currentTime);
-  void loop_testButtons();
   String name();
   bool isPinValid(int pin);
   bool getDI(int pin);
@@ -278,13 +276,6 @@ private:
   int _DORegister_noisyState;
 };
 TA_ChipHandler_KinCony_KC868_A32_R1_2::TA_ChipHandler_KinCony_KC868_A32_R1_2() {
-}
-void TA_ChipHandler_KinCony_KC868_A32_R1_2::loop_testButtons() {
-  for (int i = 0; i < 32; i++) {
-    if (getDI(i) != getDO(i)) {
-      setDO(i, getDI(i));
-    }
-  }
 }
 bool TA_ChipHandler_KinCony_KC868_A32_R1_2::_oscillateReset(int pin) {
   if (!isPinValid(pin)) {
@@ -675,11 +666,9 @@ public:
   TA_CommandHandler_KinCony_KC868_A32_R1_2();
   void setup();
   void loop(unsigned long currentTime);
-  void setup_testMemGetAll();
   unsigned long mem_int[TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2 + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT];
   int mode;
 private:
-  bool _setup_testMemGetAll = false;
   bool _IfCommand_ModeSetIdx(String command, String cmdName, int idx);
   bool _IfCommand_ModeGetIdx(String command, String cmdName);
   void _forEachToken(String command, unsigned long currentTime);
@@ -702,9 +691,6 @@ private:
   void _error(String command, String errorLabel);
 };
 TA_CommandHandler_KinCony_KC868_A32_R1_2::TA_CommandHandler_KinCony_KC868_A32_R1_2() {
-}
-void TA_CommandHandler_KinCony_KC868_A32_R1_2::setup_testMemGetAll() {
-  _setup_testMemGetAll = true;
 }
 void TA_CommandHandler_KinCony_KC868_A32_R1_2::loop(unsigned long currentTime) {
   //HANDLE CMD
@@ -987,9 +973,6 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, uns
     Serial.println(cmdName);
   }
   if (_IfCommand_MemIntGetAll(command, cmdName)) return;
-  if (_setup_testMemGetAll) {
-    return;
-  }
   if (_IfCommand_chipHandlerName(command, cmdName)) return;
   if (_IfCommand_ModeGetIdx(command, cmdName)) return;  
   if (_IfCommand_DIGetAll(command, cmdName)) return;
@@ -1039,6 +1022,24 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, uns
 }
 TA_CommandHandler_KinCony_KC868_A32_R1_2 commandHandler;
 
+//------------------------------------ IOTESTER FOR SERIAL COMMAND HANDLER FOR CHIP HANDLER (TA_ChipHandler_KinCony_KC868_A32_R1_2)------------------------------
+//FOR EACH IDX, FETCH VALUE FROM DI_IDX, SET DO_IDX AS THE VALUE
+class TA_IOTester {
+public:
+  TA_IOTester();
+  void loop();
+};
+TA_IOTester::TA_IOTester() {
+}
+void TA_IOTester::loop() {
+  for (int i = 0; i < 32; i++) {
+    int di_idx = chipHandler.getDI(i);
+    if (di_idx != chipHandler.getDO(i)) {
+      chipHandler.setDO(i, di_idx);
+    }
+  }
+}
+TA_IOTester ioTester;
 
 //------------------------------------ SURFACE TREATMEMT BATH 16 FOR SERIAL COMMAND HANDLER FOR CHIP HANDLER (TA_ChipHandler_KinCony_KC868_A32_R1_2)------------------------------
 
@@ -1190,12 +1191,13 @@ TA_SurfaceTreatmentBath surfaceTreatmentBath16;
 //------------------------------------ PROGRAM -----------------------------------------------------------------------
 
 //GLOBALS SO FAR
-//TA_stringHandler stringHandler;
+//TA_StringHandler stringHandler;
 //TA_TimeHandler timeHandler;
 //TA_SerialHandler serialHandler(TA_SerialHandler_WAIT_UNTIL_CONNECTION, TA_SerialHandler_WAIT_IN_BAUDRATE);
 //TA_SerialHandler serialHandler;
 //TA_ChipHandler_KinCony_KC868_A32_R1_2 chipHandler;
 //TA_CommandHandler_KinCony_KC868_A32_R1_2 commandHandler;
+//TA_IOTester ioTester;
 //TA_SurfaceTreatmentBath surfaceTreatmentBath16;
 
 //ARDUINO_MAIN
@@ -1203,7 +1205,6 @@ void setup() {
   serialHandler.setup();
   chipHandler.setup();
   commandHandler.setup();
-  //commandHandler.setup_testMemGetAll();
   Serial.println(F("INFO setup->loop"));
 }
 
@@ -1212,7 +1213,7 @@ void loop() {
   unsigned long curTime = timeHandler.loop();
   chipHandler.loop(curTime);
   commandHandler.loop(curTime);
-  if (commandHandler.mode == 0) chipHandler.loop_testButtons();
+  if (commandHandler.mode == 0) ioTester.loop();
   if (commandHandler.mode == 1) surfaceTreatmentBath16.loop(curTime);
 }
 
