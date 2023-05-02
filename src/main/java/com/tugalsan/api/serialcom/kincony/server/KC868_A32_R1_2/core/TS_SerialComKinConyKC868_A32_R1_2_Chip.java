@@ -4,7 +4,6 @@ import com.tugalsan.api.callable.client.TGS_CallableType1;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.serialcom.server.TS_SerialComBuilder;
 import com.tugalsan.api.serialcom.server.TS_SerialComMessageBroker;
-import com.tugalsan.api.serialcom.server.utils.TS_SerialComUtils;
 import java.time.Duration;
 import java.util.Optional;
 

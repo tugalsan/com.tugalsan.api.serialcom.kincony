@@ -35,7 +35,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
 
 //------------------------------------ LIST HANDLER -----------------------------------------------------------------------
 //https://www.tutorialspoint.com/linkedlist-in-arduino
-#include <LinkedList.h> //USEFUL
+#include <LinkedList.h>  //USEFUL
 //Library Manager -> LinkedList by Ivan Seidel -> File.Examles.LikedList
 //LinkedList<int> myList = LinkedList<int>();
 //int listSize = myList.size();
@@ -249,6 +249,7 @@ public:
   bool getButtonPrevious(int pin);
   bool oscillateIs(int pin);
   bool oscillateSet(int pin, unsigned long secDuration, unsigned long secGap, unsigned long count, unsigned long currentTime);
+  bool oscillateClear();
 private:
   bool _setDO(int pin, bool value);
   bool __fetchDI(int pin);  //RUN ONCE EVERY LOOP!
@@ -276,6 +277,12 @@ private:
   int _DORegister_noisyState;
 };
 TA_ChipHandler_KinCony_KC868_A32_R1_2::TA_ChipHandler_KinCony_KC868_A32_R1_2() {
+}
+bool TA_ChipHandler_KinCony_KC868_A32_R1_2::oscillateClear() {
+  for (int pin = 0; pin < TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT; pin++) {
+    _oscillateCount[pin] = 0;
+  }
+  return true;
 }
 bool TA_ChipHandler_KinCony_KC868_A32_R1_2::_oscillateReset(int pin) {
   if (!isPinValid(pin)) {
@@ -669,6 +676,7 @@ public:
   unsigned long mem_int[TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DI_COUNT + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_DO_COUNT * 2 + TA_CommandHandler_KinCony_KC868_A32_R1_2_MEM_INT_TIMER_COUNT];
   int mode;
 private:
+  bool _IfCommand_DOSetAllUntil(String command, String cmdName, String values, unsigned long currentTime);
   bool _IfCommand_ModeSetIdx(String command, String cmdName, int idx);
   bool _IfCommand_ModeGetIdx(String command, String cmdName);
   void _forEachToken(String command, unsigned long currentTime);
@@ -750,6 +758,36 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_MemIntSetIdx(String co
   mem_int[mem_int_offset + idx] = value;
   return true;
 }
+
+bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_DOSetAllUntil(String command, String cmdName, String values, unsigned long currentTime) {
+  if (!cmdName.equals("!DO_SET_ALL_UNTIL")) {
+    return false;
+  }
+  TA_StringTokenizer tokensAll2(values, "-");
+  int i = 0;
+  while (tokensAll2.hasNext()) {
+    unsigned long pin = stringHandler.toNumber(tokensAll2.nextToken());
+    if (!chipHandler.isPinValid(pin)) {
+      Serial.print(F("ERROR_PIN_NOT_VALID: "));
+      Serial.println(command);
+      return true;
+    }
+    i++;
+  }
+  chip.oscillateClear();
+  TA_StringTokenizer tokensAll(values, "-");
+  i = 0;
+  while (tokensAll.hasNext()) {
+    unsigned long pin = stringHandler.toNumber(tokensAll.nextToken());
+    chipHandler.oscillateSet(pin, 1, 2, 9999, currentTime);
+    i++;
+  }
+  Serial.print(F("REPLY_OF:"));
+  Serial.print(command);
+  Serial.println(F("->DONE"));
+  return true;
+}
+
 bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_DOSetIdxTrueUntil(String command, String cmdName, int pin, unsigned long duration, unsigned long gap, unsigned long count, unsigned long currentTime) {
   if (!cmdName.equals("!DO_SET_IDX_TRUE_UNTIL")) {
     return false;
@@ -956,9 +994,11 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::setup() {
     Serial.println(F("USAGE: setDigitalOutIdxTrue as (cmd, pin1-32) ex: !DO_SET_IDX_TRUE 1"));
     Serial.println(F("USAGE: setDigitalOutIdxFalse as (cmd, pin1-32) ex: !DO_SET_IDX_FALSE 1"));
     Serial.println(F("USAGE: DIGITAL OUT OSCILLATE---------------------------"));
-    Serial.println(F("USAGE: setDigitalOutOscillating as (cmd, pin1-32, secDuration, secGap, count) ex: !DO_SET_IDX_TRUE_UNTIL 12 2 1 5"));
+    Serial.println(F("USAGE: setDigitalOutOscillatingAll as (cmd, pin1-32) ex: !DO_SET_ALL_UNTIL 12 2 1 5"));
+    Serial.println(F("USAGE: setDigitalOutOscillatingIdx as (cmd, pin1-32, secDuration, secGap, count) ex: !DO_SET_IDX_TRUE_UNTIL 12 2 1 5"));
     Serial.println(F("USAGE: MEMORY-------------------------------------------"));
     Serial.println(F("USAGE: getMemIntAll as (cmd) ex: !MEMINT_GET_ALL"));
+    Serial.println(F("USAGE: setMemIntAll as (cmd) ex: !MEMINT_SET_ALL 1-2..."));
     Serial.println(F("USAGE: setMemIntIdx as (cmd, idx, secDuration) ex: !MEMINT_SET_IDX 5 2"));
   }
   mode = 0;
@@ -974,7 +1014,7 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, uns
   }
   if (_IfCommand_MemIntGetAll(command, cmdName)) return;
   if (_IfCommand_chipHandlerName(command, cmdName)) return;
-  if (_IfCommand_ModeGetIdx(command, cmdName)) return;  
+  if (_IfCommand_ModeGetIdx(command, cmdName)) return;
   if (_IfCommand_DIGetAll(command, cmdName)) return;
   if (_IfCommand_DOGetAll(command, cmdName)) return;
   if (_IfCommand_DOSetAllTrue(command, cmdName)) return;
@@ -982,6 +1022,7 @@ void TA_CommandHandler_KinCony_KC868_A32_R1_2::_forEachToken(String command, uns
   if (_IfThereIsNoNextToken(tokens, command, F("ERROR_CMD_PIN_NAME_UNCOMPLETE"))) return;
   String pinOrIdxName = tokens.nextToken();
   if (_IfCommand_MemIntSetAll(command, cmdName, pinOrIdxName)) return;
+  if (_IfCommand_DOSetAllUntil(command, cmdName, pinOrIdxName, currentTime)) return;
   unsigned long pinOrIdx = stringHandler.toNumber(pinOrIdxName);
   if (INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2) {
     Serial.print("INFO_TA_CommandHandler_KinCony_KC868_A32_R1_2:pinOrIdx:");
@@ -1116,7 +1157,11 @@ void TA_SurfaceTreatmentBath::loop(unsigned long currentTime) {
     }
 
     //ON PROCESSS, BATH LIGHT INDICATOR
-    if (chipHandler.getDO(pin) != onProcessOrSensorActive) chipHandler.setDO(pin, onProcessOrSensorActive);
+    if (chipHandler.getDO(pin) != onProcessOrSensorActive) {
+      if (onProcessOrSensorActive || !chipHandler.oscillateIs(pin)) {
+        chipHandler.setDO(pin, onProcessOrSensorActive);
+      }
+    }
 
     //STOPPED->TIMER_RUNNING
     if (_state[bath] == STOPPED) {

@@ -65,6 +65,14 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
 
 //USAGE: DIGITAL OUT OSCILLATE---------------------------
 //USAGE: setDigitalOutOscillating as (cmd, pin1-32, secDuration, secGap, count) ex: !DO_SET_IDX_TRUE_UNTIL 12 2 1 5
+    public static Optional<String> setDigitalOut_OscillatingAll(List<Integer> pins) {
+        if (pins.stream().filter(pin -> !isPinValid(pin)).findAny().isPresent()) {
+            d.ce("setDigitalOut_OscillatingAll", "ERROR_PIN_NOT_VALID");
+            return Optional.empty();
+        }
+        return Optional.of("!DO_SET_ALL_UNTIL %s".formatted(pins.stream().map(i -> i.toString()).collect(Collectors.joining("-"))));
+    }
+
     public static Optional<String> setDigitalOut_Oscillating(int pin, int secDuration, int secGap, int count) {
         if (!isPinValid(pin)) {
             return Optional.empty();
@@ -99,20 +107,20 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
         return "!MODE_SET_IDX %d".formatted(idx);
     }
 
-    public static String setMemInt_Idx(int idx, int value) {
+    public static Optional<String> setMemInt_Idx(int idx, int value) {
         if (value > MAX_VALUE) {
             d.ce("setMemInt_Idx", "ERROR_MAX_VALUE_THRESHOLD");
-            return null;
+            return Optional.empty();
         }
-        return "!MEMINT_SET_IDX %d %d".formatted(idx, value);
+        return Optional.of("!MEMINT_SET_IDX %d %d".formatted(idx, value));
     }
 
-    public static String setMemInt_All(List<Integer> values16) {
+    public static Optional<String> setMemInt_All(List<Integer> values16) {
         if (values16.stream().filter(i -> i > MAX_VALUE).findAny().isPresent()) {
             d.ce("setMemInt_All", "ERROR_MAX_VALUE_THRESHOLD");
-            return null;
+            return Optional.empty();
         }
-        return "!MEMINT_SET_ALL %s".formatted(values16.stream().map(i -> i.toString()).collect(Collectors.joining("-")));
+        return Optional.of("!MEMINT_SET_ALL %s".formatted(values16.stream().map(i -> i.toString()).collect(Collectors.joining("-"))));
     }
 
     final public static int MAX_VALUE = 2147483647;
