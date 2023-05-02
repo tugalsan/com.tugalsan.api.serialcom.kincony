@@ -5,6 +5,17 @@ public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
 //------------------------------------ WARNING -----------------------------------------------------------------------
 //FOR BOARD KinCony_KC868_A32_R1_2 PIN 1 is called pin 0 here for ease of array usage
 
+//------------------------------------ ARDUINO SETUP FOR KinCony_KC868_A32_R1_2-----------------------------------------------------------------------
+//IDE 2.1.0
+//File.Prefrences.sketchbook_location:C:\me\codes\arduino
+//File.Prefrences.compiler warnings:None
+//File.Prefrences.Additional Boards url:https://dl.espressif.com/dl/package_esp32_index.json
+//Tools.Board.Board Maneger.esp32 by Espressif.install
+//Tools.Board.esp32.NodeMcu-32S
+//PCF8574_library.zip: https://www.kincony.com/forum/attachment.php?aid=2037 -> explode to sketchbook_location\libraries\
+//WiFiManager.zip: https://www.kincony.com/forum/attachment.php?aid=2040 -> explode to sketchbook_location\libraries\
+//restart
+
 //------------------------------------ DEFINE -----------------------------------------------------------------------
 #define TA_SerialHandler_WAIT_UNTIL_CONNECTION false  //IF TRUE; WAITS FOR 3 SECONDS
 #define TA_SerialHandler_WAIT_IN_BAUDRATE 115200
@@ -22,6 +33,21 @@ public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
 
 #define TA_SurfaceTreatmentBath_TIMER_DEFAULT_VALUE 5
 #define INFO_TA_SurfaceTreatmentBath false
+
+
+//LIST
+//https://www.tutorialspoint.com/linkedlist-in-arduino
+#include <LinkedList.h>
+//Library Manager -> LinkedList by Ivan Seidel -> File.Examles.LikedList
+//LinkedList<int> myList = LinkedList<int>();
+//int listSize = myList.size();
+//myList.clear();
+//bool r = myList.add(n);//add as first
+//bool r = myList.add(idx,n);
+//bool r = myList.set(idx,n);
+//bool r = myList.remove(idx);
+//int val = myList.pop();//fetch&remove last
+//int val = myList.get(h);
 
 //------------------------------------ STRING HANDLER -----------------------------------------------------------------------
 
@@ -1190,7 +1216,6 @@ void loop() {
   if (commandHandler.mode == 0) chipHandler.loop_testButtons();
   if (commandHandler.mode == 1) surfaceTreatmentBath16.loop(curTime);
 }
-
 
 
      */
