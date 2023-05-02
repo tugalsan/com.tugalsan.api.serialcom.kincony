@@ -91,6 +91,14 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
         return "!MEMINT_GET_ALL";
     }
 
+    public static String getMode_Idx() {
+        return "!MODE_GET_IDX";
+    }
+
+    public static String setMode_Idx(int idx) {
+        return "!MODE_SET_IDX %d".formatted(idx);
+    }
+
     public static String setMemInt_Idx(int idx, int value) {
         if (value > MAX_VALUE) {
             d.ce("setMemInt_Idx", "ERROR_MAX_VALUE_THRESHOLD");

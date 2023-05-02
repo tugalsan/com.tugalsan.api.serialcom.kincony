@@ -148,6 +148,31 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
+    public static Optional<Integer> mode_getIdx(String comX) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(comX, chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getMode_Idx();
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("getMode_Idx", "ERROR_REPLY_EMPTY", reply);
+                return Optional.empty();
+            }
+            var result = TGS_CastUtils.toInteger(reply.get());
+            return result == null ? Optional.empty() : Optional.of(result);
+        });
+    }
+
+    public static boolean mode_setIdx(String comX, int idx) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(comX, chip -> {
+            var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMode_Idx(idx);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            if (reply.isEmpty()) {
+                d.ce("setMode_Idx", "ERROR_REPLY_EMPTY", "idx", idx);
+                return false;
+            }
+            return reply.get().endsWith(chip.validReplySuffixSet);
+        });
+    }
+
     public static boolean memInt_setIdx(String comX, int idx, int value) {
         return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMemInt_Idx(idx, value);
