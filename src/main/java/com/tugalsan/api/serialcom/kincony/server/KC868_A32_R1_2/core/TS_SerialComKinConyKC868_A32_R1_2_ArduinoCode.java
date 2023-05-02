@@ -2,8 +2,6 @@ package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
     /*
-//------------------------------------ WARNING -----------------------------------------------------------------------
-//FOR BOARD KinCony_KC868_A32_R1_2 PIN 1 is called pin 0 here for ease of array usage
 
 //------------------------------------ ARDUINO SETUP FOR KinCony_KC868_A32_R1_2-----------------------------------------------------------------------
 //IDE 2.1.0
@@ -15,6 +13,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
 //PCF8574_library.zip: https://www.kincony.com/forum/attachment.php?aid=2037 -> explode to sketchbook_location\libraries\
 //WiFiManager.zip: https://www.kincony.com/forum/attachment.php?aid=2040 -> explode to sketchbook_location\libraries\
 //restart
+//WARNING: FOR BOARD KinCony_KC868_A32_R1_2 PIN 1 is called pin 0 here for ease of array usage
 
 //------------------------------------ DEFINE -----------------------------------------------------------------------
 #define TA_SerialHandler_WAIT_UNTIL_CONNECTION false  //IF TRUE; WAITS FOR 3 SECONDS
