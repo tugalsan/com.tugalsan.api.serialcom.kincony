@@ -34,7 +34,8 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
 
     public static boolean callBoolResult(String comX, TGS_CallableType1<Boolean, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
         TGS_CallableType1<Optional<Boolean>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip2 = c -> Optional.of(chip.call(c));
-        return callOptional(comX, chip2, defaultTimeoutDuration()).get();
+        var result = callOptional(comX, chip2, defaultTimeoutDuration());
+        return result.isEmpty() ? false : result.get();
     }
 
     public static Optional<String> callStrOptional(String comX, TGS_CallableType1<Optional<String>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
