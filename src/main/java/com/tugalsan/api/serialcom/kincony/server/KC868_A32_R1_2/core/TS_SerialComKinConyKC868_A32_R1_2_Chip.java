@@ -4,6 +4,7 @@ import com.tugalsan.api.callable.client.TGS_CallableType1;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.serialcom.server.TS_SerialComBuilder;
 import com.tugalsan.api.serialcom.server.TS_SerialComMessageBroker;
+import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import java.time.Duration;
 import java.util.Optional;
 
@@ -60,8 +61,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
                 .onSuccess_useAndClose_defaultMessageBroker((con, mb) -> {
                     var chipDriver = TS_SerialComKinConyKC868_A32_R1_2_Chip.of(mb, timeout);
                     result.value = chip.call(chipDriver);
-                }
-                );
+                });
         return result.value;
     }
 
