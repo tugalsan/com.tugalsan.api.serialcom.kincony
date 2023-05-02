@@ -774,7 +774,7 @@ bool TA_CommandHandler_KinCony_KC868_A32_R1_2::_IfCommand_DOSetAllUntil(String c
     }
     i++;
   }
-  chip.oscillateClear();
+  chipHandler.oscillateClear();
   TA_StringTokenizer tokensAll(values, "-");
   i = 0;
   while (tokensAll.hasNext()) {
