@@ -7,6 +7,7 @@ import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialCo
 import com.tugalsan.api.serialcom.server.utils.TS_SerialComUtils;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
 import com.tugalsan.api.string.server.TS_StringUtils;
+import com.tugalsan.api.thread.server.TS_ThreadKillTrigger;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,18 +19,18 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         return TS_SerialComUtils.listNames();
     }
 
-    public static Optional<String> chipName(String comX) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(comX, chip -> chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.chipName(), chip.timeout, chip.validReplyPrefix, true));
+    public static Optional<String> chipName(TS_ThreadKillTrigger killTrigger, String comX) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(killTrigger, comX, chip -> chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.chipName(), chip.timeout, chip.validReplyPrefix, true));
     }
 
-    public static Optional<Boolean> digitalIn_getIdx(String comX, int pin) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(comX, chip -> {
+    public static Optional<Boolean> digitalIn_getIdx(TS_ThreadKillTrigger killTrigger, String comX, int pin) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalIn(pin);
             if (cmd.isEmpty()) {
                 d.ce("digitalIn_getIdx", "ERROR_CMD_EMPTY", "pin", pin);
                 return Optional.empty();
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("digitalIn_getIdx", "ERROR_REPLY_EMPTY", reply);
                 return Optional.empty();
@@ -38,10 +39,10 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static Optional<List<Boolean>> digitalIn_getAll(String comX) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(comX, chip -> {
+    public static Optional<List<Boolean>> digitalIn_getAll(TS_ThreadKillTrigger killTrigger, String comX) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalIn_All();
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd, chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("digitalIn_getAll", "ERROR_REPLY_EMPTY", reply);
                 return Optional.empty();
@@ -54,14 +55,14 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static Optional<Boolean> digitalOut_getIdx(String comX, int pin) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(comX, chip -> {
+    public static Optional<Boolean> digitalOut_getIdx(TS_ThreadKillTrigger killTrigger, String comX, int pin) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalOut(pin);
             if (cmd.isEmpty()) {
                 d.ce("digitalOut_getIdx", "ERROR_CMD_EMPTY", "pin", pin);
                 return Optional.empty();
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("digitalOut_getIdx", "ERROR_REPLY_EMPTY", reply);
                 return Optional.empty();
@@ -70,10 +71,10 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static Optional<List<Boolean>> digitalOut_getAll(String comX) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(comX, chip -> {
+    public static Optional<List<Boolean>> digitalOut_getAll(TS_ThreadKillTrigger killTrigger, String comX) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalOut_All();
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd, chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("digitalOut_getAll", "ERROR_REPLY_EMPTY", reply);
                 return Optional.empty();
@@ -86,10 +87,10 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static boolean digitalOut_setAll(String comX, boolean value) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(comX, chip -> {
+    public static boolean digitalOut_setAll(TS_ThreadKillTrigger killTrigger, String comX, boolean value) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_All(value);
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd, chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("digitalOut_setAll", "ERROR_REPLY_EMPTY", "value", value);
                 return false;
@@ -98,14 +99,14 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static boolean digitalOut_setIdx(String comX, int pin, boolean value) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(comX, chip -> {
+    public static boolean digitalOut_setIdx(TS_ThreadKillTrigger killTrigger, String comX, int pin, boolean value) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut(pin, value);
             if (cmd.isEmpty()) {
                 d.ce("digitalOut_setIdx", "ERROR_CMD_EMPTY", "pin", pin, "value", value);
                 return false;
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("digitalOut_setIdx", "ERROR_REPLY_EMPTY", "pin", pin, "value", value);
                 return false;
@@ -114,14 +115,14 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static boolean digitalOut_oscilate(String comX, int pin, int secDuration, int secGap, int count) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(comX, chip -> {
+    public static boolean digitalOut_oscilate(TS_ThreadKillTrigger killTrigger, String comX, int pin, int secDuration, int secGap, int count) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_Oscillating(pin, secDuration, secGap, count);
             if (cmd.isEmpty()) {
                 d.ce("digitalOut_oscilate", "ERROR_CMD_EMPTY", "pin", pin, "secDuration", secDuration, "secGap", secGap, "count", count);
                 return false;
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("digitalOut_oscilate", "ERROR_REPLY_EMPTY", "pin", pin, "secDuration", secDuration, "secGap", secGap, "count", count);
             }
@@ -129,10 +130,10 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static Optional<List<Integer>> memInt_getAll(String comX) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(comX, chip -> {
+    public static Optional<List<Integer>> memInt_getAll(TS_ThreadKillTrigger killTrigger, String comX) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getMemInt_All();
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd, chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("memInt_getAll", "ERROR_REPLY_EMPTY", reply);
                 return Optional.empty();
@@ -148,10 +149,10 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static Optional<Integer> mode_getIdx(String comX) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(comX, chip -> {
+    public static Optional<Integer> mode_getIdx(TS_ThreadKillTrigger killTrigger, String comX) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getMode_Idx();
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd, chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("getMode_Idx", "ERROR_REPLY_EMPTY", reply);
                 return Optional.empty();
@@ -161,10 +162,10 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static boolean mode_setIdx(String comX, int idx) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(comX, chip -> {
+    public static boolean mode_setIdx(TS_ThreadKillTrigger killTrigger, String comX, int idx) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMode_Idx(idx);
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd, chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd, chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("setMode_Idx", "ERROR_REPLY_EMPTY", "idx", idx);
                 return false;
@@ -173,13 +174,13 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static boolean memInt_setIdx(String comX, int idx, int value) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(comX, chip -> {
+    public static boolean memInt_setIdx(TS_ThreadKillTrigger killTrigger, String comX, int idx, int value) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMemInt_Idx(idx, value);
             if (cmd.isEmpty()) {
                 return false;
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("memInt_setIdx", "ERROR_REPLY_EMPTY", "idx", idx, "value", value);
                 return false;
@@ -188,13 +189,13 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
         });
     }
 
-    public static boolean memInt_setAll(String comX, List<Integer> values16) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(comX, chip -> {
+    public static boolean memInt_setAll(TS_ThreadKillTrigger killTrigger, String comX, List<Integer> values16) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMemInt_All(values16);
             if (cmd.isEmpty()) {
                 return false;
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("memInt_setAll", "ERROR_REPLY_EMPTY", "values", values16);
                 return false;
@@ -202,14 +203,14 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
             return reply.get().endsWith(chip.validReplySuffixSet);
         });
     }
-    
-    public static boolean digitalOut_oscilateAll(String comX, List<Integer> pins) {
-        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(comX, chip -> {
+
+    public static boolean digitalOut_oscilateAll(TS_ThreadKillTrigger killTrigger, String comX, List<Integer> pins) {
+        return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_OscillatingAll(pins);
             if (cmd.isEmpty()) {
                 return false;
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isEmpty()) {
                 d.ce("digitalOut_oscilateAll", "ERROR_REPLY_EMPTY", "pins", pins);
                 return false;

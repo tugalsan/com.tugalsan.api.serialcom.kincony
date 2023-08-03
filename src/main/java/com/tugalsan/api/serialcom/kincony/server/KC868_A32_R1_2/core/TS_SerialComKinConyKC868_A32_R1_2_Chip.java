@@ -4,6 +4,7 @@ import com.tugalsan.api.callable.client.TGS_CallableType1;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.serialcom.server.TS_SerialComBuilder;
 import com.tugalsan.api.serialcom.server.TS_SerialComMessageBroker;
+import com.tugalsan.api.thread.server.TS_ThreadKillTrigger;
 import java.time.Duration;
 import java.util.Optional;
 
@@ -32,21 +33,21 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
         return new TS_SerialComKinConyKC868_A32_R1_2_Chip(mb, timeout);
     }
 
-    public static boolean callBoolResult(String comX, TGS_CallableType1<Boolean, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
+    public static boolean callBoolResult(TS_ThreadKillTrigger killTrigger, String comX, TGS_CallableType1<Boolean, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
         TGS_CallableType1<Optional<Boolean>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip2 = c -> Optional.of(chip.call(c));
-        var result = callOptional(comX, chip2, defaultTimeoutDuration());
+        var result = callOptional(killTrigger, comX, chip2, defaultTimeoutDuration());
         return result.isEmpty() ? false : result.get();
     }
 
-    public static Optional<String> callStrOptional(String comX, TGS_CallableType1<Optional<String>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
-        return callOptional(comX, chip, defaultTimeoutDuration());
+    public static Optional<String> callStrOptional(TS_ThreadKillTrigger killTrigger, String comX, TGS_CallableType1<Optional<String>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
+        return callOptional(killTrigger, comX, chip, defaultTimeoutDuration());
     }
 
-    public static <T> Optional<T> callOptional(String comX, TGS_CallableType1<Optional<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
-        return callOptional(comX, chip, defaultTimeoutDuration());
+    public static <T> Optional<T> callOptional(TS_ThreadKillTrigger killTrigger, String comX, TGS_CallableType1<Optional<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
+        return callOptional(killTrigger, comX, chip, defaultTimeoutDuration());
     }
 
-    public static <T> Optional<T> callOptional(String comX, TGS_CallableType1<Optional<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip, Duration timeout) {
+    public static <T> Optional<T> callOptional(TS_ThreadKillTrigger killTrigger, String comX, TGS_CallableType1<Optional<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip, Duration timeout) {
         var result = new Object() {
             Optional<T> value = Optional.empty();
         };
@@ -58,7 +59,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
                 .onSetupError(() -> d.ce("onSetupError", "Is the port selection correct for the device?"))
                 .onConnectError(() -> d.ce("onConnectError", "Have you already connected by another program (like arduino serial monitor)?"))
                 .onReply_useDefaultMessageBroker_withMaxMessageCount(defaultBrokerSize())
-                .onSuccess_useAndClose_defaultMessageBroker((con, mb) -> {
+                .onSuccess_useAndClose_defaultMessageBroker(killTrigger, (con, mb) -> {
                     var chipDriver = TS_SerialComKinConyKC868_A32_R1_2_Chip.of(mb, timeout);
                     result.value = chip.call(chipDriver);
                 });

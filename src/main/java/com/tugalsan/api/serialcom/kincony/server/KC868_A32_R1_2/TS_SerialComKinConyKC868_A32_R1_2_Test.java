@@ -4,6 +4,7 @@ import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialComKinConyKC868_A32_R1_2_Chip;
 import com.tugalsan.api.serialcom.server.*;
+import com.tugalsan.api.thread.server.TS_ThreadKillTrigger;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.stream.*;
@@ -13,6 +14,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
     final private static TS_Log d = TS_Log.of(TS_SerialComKinConyKC868_A32_R1_2_Test.class);
 
     public static void main(String... s) {
+        var killTrigger = TS_ThreadKillTrigger.of();
         try (var reader = new BufferedReader(new InputStreamReader(System.in));) {
             boolean debugEnabled = true;
             while (true) {
@@ -33,8 +35,8 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
                 var choiceInt = TGS_CastUtils.toInteger(choiceStr);
                 var comX = "COM3";
                 if (choiceInt == null) {
-                    d.cr("test", "custom", choiceStr, TS_SerialComKinConyKC868_A32_R1_2_Chip.callStrOptional(comX, chip -> {
-                        return chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(choiceStr, chip.timeout, chip.validReplyPrefix, true);
+                    d.cr("test", "custom", choiceStr, TS_SerialComKinConyKC868_A32_R1_2_Chip.callStrOptional(killTrigger, comX, chip -> {
+                        return chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, choiceStr, chip.timeout, chip.validReplyPrefix, true);
                     }));
                     continue;
                 }
@@ -44,23 +46,23 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
                     case 1 ->
                         debugEnabled = !debugEnabled;
                     case 2 ->
-                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(debugEnabled, true, false, false, false, false, false, false, false, false);
+                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(killTrigger, debugEnabled, true, false, false, false, false, false, false, false, false);
                     case 3 ->
-                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(debugEnabled, false, true, false, false, false, false, false, false, false);
+                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(killTrigger, debugEnabled, false, true, false, false, false, false, false, false, false);
                     case 4 ->
-                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(debugEnabled, false, false, true, false, false, false, false, false, false);
+                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(killTrigger, debugEnabled, false, false, true, false, false, false, false, false, false);
                     case 5 ->
-                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(debugEnabled, false, false, false, true, false, false, false, false, false);
+                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(killTrigger, debugEnabled, false, false, false, true, false, false, false, false, false);
                     case 6 ->
-                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(debugEnabled, false, false, false, false, true, false, false, false, false);
+                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(killTrigger, debugEnabled, false, false, false, false, true, false, false, false, false);
                     case 7 ->
-                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(debugEnabled, false, false, false, false, false, true, false, false, false);
+                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(killTrigger, debugEnabled, false, false, false, false, false, true, false, false, false);
                     case 8 ->
-                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(debugEnabled, false, false, false, false, false, false, true, false, false);
+                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(killTrigger, debugEnabled, false, false, false, false, false, false, true, false, false);
                     case 9 ->
-                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(debugEnabled, false, false, false, false, false, false, false, true, false);
+                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(killTrigger, debugEnabled, false, false, false, false, false, false, false, true, false);
                     case 10 ->
-                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(debugEnabled, false, false, false, false, false, false, false, false, true);
+                        TS_SerialComKinConyKC868_A32_R1_2_Test.test(killTrigger, debugEnabled, false, false, false, false, false, false, false, false, true);
                     default ->
                         d.ce("test", "WHAT_TO_DO_WITH_THIS", choiceStr);
                 }
@@ -70,7 +72,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
         }
     }
 
-    public static void test(
+    public static void test(TS_ThreadKillTrigger killTrigger,
             boolean debugEnable,
             boolean test_chipname,
             boolean test_digitalIn_getAll,
@@ -89,50 +91,50 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
 
         //USAGE: GENERAL------------------------------------------
         if (test_chipname) {
-            d.cr("test", "chipName", TS_SerialComKinConyKC868_A32_R1_2.chipName(comX));
+            d.cr("test", "chipName", TS_SerialComKinConyKC868_A32_R1_2.chipName(killTrigger, comX));
         }
 
         //USAGE: DIGITAL IN GET-----------------------------------
         if (test_digitalIn_getAll) {
-            d.cr("test", "digitalIn_getAll", TS_SerialComKinConyKC868_A32_R1_2.digitalIn_getAll(comX));
+            d.cr("test", "digitalIn_getAll", TS_SerialComKinConyKC868_A32_R1_2.digitalIn_getAll(killTrigger, comX));
         }
         if (test_digitalIn_getIdx) {
             IntStream.range(0, 32).forEachOrdered(i -> {
-                d.cr("test", "digitalIn_getIdx(" + i + ")", TS_SerialComKinConyKC868_A32_R1_2.digitalIn_getIdx(comX, i));
+                d.cr("test", "digitalIn_getIdx(" + i + ")", TS_SerialComKinConyKC868_A32_R1_2.digitalIn_getIdx(killTrigger, comX, i));
             });
         }
 
         //USAGE: DIGITAL OUT GET----------------------------------
         if (test_digitalOut_getAll) {
-            d.cr("test", "digitalOut_getAll", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_getAll(comX));
+            d.cr("test", "digitalOut_getAll", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_getAll(killTrigger, comX));
         }
         if (test_digitalOut_getIdx) {
             IntStream.range(0, 32).forEachOrdered(i -> {
-                d.cr("test", "digitalOut_getIdx(" + i + ")", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_getIdx(comX, i));
+                d.cr("test", "digitalOut_getIdx(" + i + ")", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_getIdx(killTrigger, comX, i));
             });
         }
         //USAGE: DIGITAL OUT SET----------------------------------
         if (test_digitalOut_setAll) {
-            d.cr("test", "digitalOut_setAll(true)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setAll(comX, true));
-            d.cr("test", "digitalOut_setAll(false)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setAll(comX, false));
+            d.cr("test", "digitalOut_setAll(true)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setAll(killTrigger, comX, true));
+            d.cr("test", "digitalOut_setAll(false)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setAll(killTrigger, comX, false));
         }
         if (test_digitalOut_setIdx) {
             IntStream.range(0, 32).forEachOrdered(i -> {
-                d.cr("test", "digitalOut_setIdx(" + i + ", true)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setIdx(comX, i, true));
+                d.cr("test", "digitalOut_setIdx(" + i + ", true)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setIdx(killTrigger, comX, i, true));
             });
             IntStream.range(0, 32).forEachOrdered(i -> {
-                d.cr("test", "digitalOut_setIdx(" + i + ", false)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setIdx(comX, i, false));
+                d.cr("test", "digitalOut_setIdx(" + i + ", false)", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_setIdx(killTrigger, comX, i, false));
             });
         }
         //USAGE: DIGITAL OUT OSCILLATE---------------------------
         if (test_oscillate) {
-            d.cr("test", "digitalOut_oscilate", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_oscilate(comX, 12, 1, 2, 5));
+            d.cr("test", "digitalOut_oscilate", TS_SerialComKinConyKC868_A32_R1_2.digitalOut_oscilate(killTrigger, comX, 12, 1, 2, 5));
         }
 
         //USAGE: MEMORY-------------------------------------------
         if (test_memory) {
-            d.cr("test", "memInt_setIdx(1, 15)", TS_SerialComKinConyKC868_A32_R1_2.memInt_setIdx(comX, 1, 15));
-            d.cr("test", "memInt_getAll", TS_SerialComKinConyKC868_A32_R1_2.memInt_getAll(comX));
+            d.cr("test", "memInt_setIdx(1, 15)", TS_SerialComKinConyKC868_A32_R1_2.memInt_setIdx(killTrigger, comX, 1, 15));
+            d.cr("test", "memInt_getAll", TS_SerialComKinConyKC868_A32_R1_2.memInt_getAll(killTrigger, comX));
         }
     }
 }
