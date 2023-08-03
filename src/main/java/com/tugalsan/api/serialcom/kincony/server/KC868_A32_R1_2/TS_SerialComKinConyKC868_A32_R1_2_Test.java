@@ -4,7 +4,7 @@ import com.tugalsan.api.cast.client.TGS_CastUtils;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialComKinConyKC868_A32_R1_2_Chip;
 import com.tugalsan.api.serialcom.server.*;
-import com.tugalsan.api.thread.server.TS_ThreadKillTrigger;
+import com.tugalsan.api.thread.server.safe.TS_ThreadSafeTrigger;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.stream.*;
@@ -14,7 +14,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
     final private static TS_Log d = TS_Log.of(TS_SerialComKinConyKC868_A32_R1_2_Test.class);
 
     public static void main(String... s) {
-        var killTrigger = TS_ThreadKillTrigger.of();
+        var killTrigger = TS_ThreadSafeTrigger.of();
         try (var reader = new BufferedReader(new InputStreamReader(System.in));) {
             boolean debugEnabled = true;
             while (true) {
@@ -72,7 +72,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
         }
     }
 
-    public static void test(TS_ThreadKillTrigger killTrigger,
+    public static void test(TS_ThreadSafeTrigger killTrigger,
             boolean debugEnable,
             boolean test_chipname,
             boolean test_digitalIn_getAll,
