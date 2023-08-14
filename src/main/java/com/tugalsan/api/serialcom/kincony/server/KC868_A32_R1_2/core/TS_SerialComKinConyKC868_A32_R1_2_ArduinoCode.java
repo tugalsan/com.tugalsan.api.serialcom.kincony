@@ -3,7 +3,9 @@ package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 public class TS_SerialComKinConyKC868_A32_R1_2_ArduinoCode {
     /*
 //------------------------------------ ARDUINO SETUP FOR KinCony_KC868_A32_R1_2-----------------------------------------------------------------------
-//USB Driver ch341ser.zip -> https://www.kincony.com/download/CH341SER.zip
+//USB Driver ch341ser.zip
+    - Windows: https://www.kincony.com/download/CH341SER.zip
+    - Linux: ?
 //Arudino IDE 2.1.0
 //File.Prefrences.sketchbook_location:C:\me\codes\arduino
 //File.Prefrences.compiler warnings:None
