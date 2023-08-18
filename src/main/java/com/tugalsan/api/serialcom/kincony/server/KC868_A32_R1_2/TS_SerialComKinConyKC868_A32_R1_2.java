@@ -15,8 +15,12 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
 
     final private static TS_Log d = TS_Log.of(TS_SerialComKinConyKC868_A32_R1_2.class);
 
-    public static List<String> portNames() {
-        return TS_SerialComUtils.listNames();
+    public static List<String> listPortNamesFull() {
+        return TS_SerialComUtils.listNamesFull();
+    }
+
+    public static List<String> listPortNames() {
+        return TS_SerialComUtils.listNamesPort();
     }
 
     public static Optional<String> chipName(TS_ThreadSyncTrigger killTrigger, String comX) {
