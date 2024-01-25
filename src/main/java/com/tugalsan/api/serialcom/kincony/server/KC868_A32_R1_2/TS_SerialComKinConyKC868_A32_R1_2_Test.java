@@ -17,7 +17,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
     public static void main(String... s) {
         var killTrigger = TS_ThreadSyncTrigger.of();
         try (var reader = new BufferedReader(new InputStreamReader(System.in));) {
-            boolean debugEnabled = true;
+            var debugEnabled = true;
             while (true) {
                 d.ci("test", "--------------------------------------------");
                 d.ci("test", "choice", "0: exit");

@@ -143,12 +143,15 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
                 return Optional.empty();
             }
             var results = TS_StringUtils.toList_spc(reply.get());
-            for (var val : results) {
-                if (!TGS_CastUtils.isInteger(val)) {
-                    d.ce("memInt_getAll", "ERROR_NOT_INT", val, reply.get(), results);
-                    Optional.empty();
-                }
-            }
+            results.stream()
+                    .filter(val -> (!TGS_CastUtils.isInteger(val)))
+                    .map(val -> {
+                        d.ce("memInt_getAll", "ERROR_NOT_INT", val, reply.get(), results);
+                        return val;
+                    })
+                    .forEachOrdered(_item -> {
+                        Optional.empty();
+                    });
             return Optional.of(TGS_StreamUtils.toLst(results.stream().mapToInt(s -> Integer.valueOf(s))));
         });
     }

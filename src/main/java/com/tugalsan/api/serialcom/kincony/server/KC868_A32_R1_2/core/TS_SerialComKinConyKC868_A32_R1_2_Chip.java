@@ -36,7 +36,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
     public static boolean callBoolResult(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<Boolean, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
         TGS_CallableType1<Optional<Boolean>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip2 = c -> Optional.of(chip.call(c));
         var result = callOptional(killTrigger, comX, chip2, defaultTimeoutDuration());
-        return result.isEmpty() ? false : result.get();
+        return result.orElse(false);
     }
 
     public static Optional<String> callStrOptional(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<Optional<String>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
