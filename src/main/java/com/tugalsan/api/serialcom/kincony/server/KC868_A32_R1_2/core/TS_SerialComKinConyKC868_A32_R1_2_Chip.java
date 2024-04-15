@@ -5,8 +5,8 @@ import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.serialcom.server.TS_SerialComBuilder;
 import com.tugalsan.api.serialcom.server.TS_SerialComMessageBroker;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import java.time.Duration;
-import java.util.Optional;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
 
@@ -33,37 +33,37 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
         return new TS_SerialComKinConyKC868_A32_R1_2_Chip(mb, timeout);
     }
 
-    public static boolean callBoolResult(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<Boolean, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
-        TGS_CallableType1<Optional<Boolean>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip2 = c -> Optional.of(chip.call(c));
+    public static TGS_UnionExcuse<Boolean> callBoolResult(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<Boolean, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
+        TGS_CallableType1<TGS_UnionExcuse<Boolean>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip2 = c -> TGS_UnionExcuse.of(chip.call(c));
         var result = callOptional(killTrigger, comX, chip2, defaultTimeoutDuration());
-        return result.orElse(false);
+        return result;
     }
 
-    public static Optional<String> callStrOptional(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<Optional<String>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
+    public static TGS_UnionExcuse<String> callStrOptional(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<TGS_UnionExcuse<String>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
         return callOptional(killTrigger, comX, chip, defaultTimeoutDuration());
     }
 
-    public static <T> Optional<T> callOptional(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<Optional<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
+    public static <T> TGS_UnionExcuse<T> callOptional(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<TGS_UnionExcuse<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
         return callOptional(killTrigger, comX, chip, defaultTimeoutDuration());
     }
 
-    public static <T> Optional<T> callOptional(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<Optional<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip, Duration timeout) {
-        var result = new Object() {
-            Optional<T> value = Optional.empty();
+    public static <T> TGS_UnionExcuse<T> callOptional(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<TGS_UnionExcuse<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip, Duration timeout) {
+        var wrap = new Object() {
+            TGS_UnionExcuse<T> u = TGS_UnionExcuse.ofExcuse(d.className, "callOptional", "not initilized");
         };
         TS_SerialComBuilder
                 .port(comX)
                 .baudRate_115200()
                 .dataBits_8().oneStopBit().parityNone()
-                .onPortError(() -> d.ce("onPortError", "Did you connect the cable and power up the device?"))
-                .onSetupError(() -> d.ce("onSetupError", "Is the port selection correct for the device?"))
-                .onConnectError(() -> d.ce("onConnectError", "Have you already connected by another program (like arduino serial monitor)?"))
+                .onPortError(() -> wrap.u = TGS_UnionExcuse.ofExcuse(d.className, "onPortError", "Did you connect the cable and power up the device?"))
+                .onSetupError(() -> wrap.u = TGS_UnionExcuse.ofExcuse(d.className, "onSetupError", "Is the port selection correct for the device?"))
+                .onConnectError(() -> wrap.u = TGS_UnionExcuse.ofExcuse(d.className, "onConnectError", "Have you already connected by another program (like arduino serial monitor)?"))
                 .onReply_useDefaultMessageBroker_withMaxMessageCount(defaultBrokerSize())
                 .onSuccess_useAndClose_defaultMessageBroker(killTrigger, (con, mb) -> {
                     var chipDriver = TS_SerialComKinConyKC868_A32_R1_2_Chip.of(mb, timeout);
-                    result.value = chip.call(chipDriver);
+                    wrap.u = chip.call(chipDriver);
                 });
-        return result.value;
+        return wrap.u;
     }
 
 }

@@ -6,7 +6,6 @@ import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialCo
 import com.tugalsan.api.serialcom.server.*;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import com.tugalsan.api.union.server.TS_UnionUtils;
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.stream.*;
