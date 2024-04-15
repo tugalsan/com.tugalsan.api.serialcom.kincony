@@ -37,14 +37,14 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
     public static TGS_UnionExcuse<Boolean> digitalIn_getIdx(TS_ThreadSyncTrigger killTrigger, String comX, int pin) {
         return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalIn(pin);
-            if (cmd.isEmpty()) {
-                return TGS_UnionExcuse.ofExcuse(d.className, "digitalIn_getIdx", "ERROR_CMD_EMPTY -> pin: " + pin);
+            if (cmd.isExcuse()) {
+                return cmd.toExcuse();
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.value(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
-            return TGS_UnionExcuse.of(reply.get().equals("1"));
+            return TGS_UnionExcuse.of(reply.value().equals("1"));
         });
     }
 
@@ -58,17 +58,17 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
             if (reply.value().length() != 32) {
                 return TGS_UnionExcuse.ofExcuse(d.className, "digitalIn_getAll", "ERROR_SIZE_NOT_32: " + reply);
             }
-            return TGS_UnionExcuse.of(TGS_StreamUtils.toLst(reply.get().chars().boxed().map(c -> c.equals(Integer.valueOf('1')))));
+            return TGS_UnionExcuse.of(TGS_StreamUtils.toLst(reply.value().chars().boxed().map(c -> c.equals(Integer.valueOf('1')))));
         });
     }
 
     public static TGS_UnionExcuse<Boolean> digitalOut_getIdx(TS_ThreadSyncTrigger killTrigger, String comX, int pin) {
         return TS_SerialComKinConyKC868_A32_R1_2_Chip.callOptional(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.getDigitalOut(pin);
-            if (cmd.isEmpty()) {
-                return TGS_UnionExcuse.ofExcuse(d.className, "digitalOut_getIdx", "ERROR_CMD_EMPTY -> pin: " + pin);
+            if (cmd.isExcuse()) {
+                return cmd.toExcuse();
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.value(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
@@ -97,38 +97,37 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
-            return reply.value().endsWith(chip.validReplySuffixSet);
+            return TGS_UnionExcuse.of(reply.value().endsWith(chip.validReplySuffixSet));
         });
     }
 
     public static TGS_UnionExcuse<Boolean> digitalOut_setIdx(TS_ThreadSyncTrigger killTrigger, String comX, int pin, boolean value) {
         return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut(pin, value);
-            if (cmd.isEmpty()) {
+            if (cmd.isExcuse()) {
                 d.ce("digitalOut_setIdx", "ERROR_CMD_EMPTY", "pin", pin, "value", value);
-                return false;
+                return cmd.toExcuse();
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.value(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
-            return reply.value().endsWith(chip.validReplySuffixSet);
+            return TGS_UnionExcuse.of(reply.value().endsWith(chip.validReplySuffixSet));
         });
     }
 
     public static TGS_UnionExcuse<Boolean> digitalOut_oscilate(TS_ThreadSyncTrigger killTrigger, String comX, int pin, int secDuration, int secGap, int count) {
         return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_Oscillating(pin, secDuration, secGap, count);
-            if (cmd.isEmpty()) {
-                d.ce("digitalOut_oscilate", "ERROR_CMD_EMPTY", "pin", pin, "secDuration", secDuration, "secGap", secGap, "count", count);
-                return false;
+            if (cmd.isExcuse()) {
+                return cmd.toExcuse();
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.value(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
 
-            return reply.value().endsWith(chip.validReplySuffixSet);
+            return TGS_UnionExcuse.of(reply.value().endsWith(chip.validReplySuffixSet));
         });
     }
 
@@ -171,49 +170,49 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
-            return reply.value().endsWith(chip.validReplySuffixSet);
+            return TGS_UnionExcuse.of(reply.value().endsWith(chip.validReplySuffixSet));
         });
     }
 
     public static TGS_UnionExcuse<Boolean> memInt_setIdx(TS_ThreadSyncTrigger killTrigger, String comX, int idx, int value) {
         return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMemInt_Idx(idx, value);
-            if (cmd.isEmpty()) {
-                return false;
+            if (cmd.isExcuse()) {
+                return cmd.toExcuse();
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.value(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
-            return reply.value().endsWith(chip.validReplySuffixSet);
+            return TGS_UnionExcuse.of(reply.value().endsWith(chip.validReplySuffixSet));
         });
     }
 
     public static TGS_UnionExcuse<Boolean> memInt_setAll(TS_ThreadSyncTrigger killTrigger, String comX, List<Integer> values16) {
         return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setMemInt_All(values16);
-            if (cmd.isEmpty()) {
-                return false;
+            if (cmd.isExcuse()) {
+                return cmd.toExcuse();
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.value(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
-            return reply.value().endsWith(chip.validReplySuffixSet);
+            return TGS_UnionExcuse.of(reply.value().endsWith(chip.validReplySuffixSet));
         });
     }
 
     public static TGS_UnionExcuse<Boolean> digitalOut_oscilateAll(TS_ThreadSyncTrigger killTrigger, String comX, List<Integer> pins) {
         return TS_SerialComKinConyKC868_A32_R1_2_Chip.callBoolResult(killTrigger, comX, chip -> {
             var cmd = TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder.setDigitalOut_OscillatingAll(pins);
-            if (cmd.isEmpty()) {
-                return false;
+            if (cmd.isExcuse()) {
+                return cmd.toExcuse();
             }
-            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.get(), chip.timeout, chip.validReplyPrefix, true);
+            var reply = chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, cmd.value(), chip.timeout, chip.validReplyPrefix, true);
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
-            return reply.value().endsWith(chip.validReplySuffixSet);
+            return TGS_UnionExcuse.of(reply.value().endsWith(chip.validReplySuffixSet));
         });
     }
 }

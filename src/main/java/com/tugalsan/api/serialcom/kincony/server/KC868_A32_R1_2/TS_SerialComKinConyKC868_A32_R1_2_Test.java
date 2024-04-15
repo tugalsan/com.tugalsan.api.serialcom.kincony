@@ -35,13 +35,13 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
                 var choiceStr = reader.readLine();
                 var choiceInt = TGS_CastUtils.toInteger(choiceStr);
                 var comX = "COM3";
-                if (choiceInt == null) {
+                if (choiceInt.isExcuse()) {
                     d.cr("test", "custom", choiceStr, TS_SerialComKinConyKC868_A32_R1_2_Chip.callStrOptional(killTrigger, comX, chip -> {
                         return chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, choiceStr, chip.timeout, chip.validReplyPrefix, true);
                     }));
                     continue;
                 }
-                switch (choiceInt) {
+                switch (choiceInt.value()) {
                     case 0 ->
                         System.exit(0);
                     case 1 ->

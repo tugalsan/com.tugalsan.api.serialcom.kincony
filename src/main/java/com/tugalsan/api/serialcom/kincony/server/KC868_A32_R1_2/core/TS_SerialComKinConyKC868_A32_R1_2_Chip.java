@@ -33,8 +33,8 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
         return new TS_SerialComKinConyKC868_A32_R1_2_Chip(mb, timeout);
     }
 
-    public static TGS_UnionExcuse<Boolean> callBoolResult(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<Boolean, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
-        TGS_CallableType1<TGS_UnionExcuse<Boolean>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip2 = c -> TGS_UnionExcuse.of(chip.call(c));
+    public static TGS_UnionExcuse<Boolean> callBoolResult(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<TGS_UnionExcuse<Boolean>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
+        TGS_CallableType1<TGS_UnionExcuse<Boolean>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip2 = c -> chip.call(c);
         var result = callOptional(killTrigger, comX, chip2, defaultTimeoutDuration());
         return result;
     }

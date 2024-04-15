@@ -1,8 +1,8 @@
 package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
 import com.tugalsan.api.log.server.TS_Log;
+import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
@@ -26,11 +26,11 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
         return "!DI_GET_ALL";
     }
 
-    public static Optional<String> getDigitalIn(int pin) {
+    public static TGS_UnionExcuse<String> getDigitalIn(int pin) {
         if (!isPinValid(pin)) {
-            return Optional.empty();
+            return TGS_UnionExcuse.ofExcuse(d.className, "getDigitalIn", "!isPinValid(pin)");
         }
-        return Optional.of("!DI_GET_IDX %d".formatted(pin));
+        return TGS_UnionExcuse.of("!DI_GET_IDX %d".formatted(pin));
     }
 
 //USAGE: DIGITAL OUT GET----------------------------------
@@ -40,11 +40,11 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
         return "!DO_GET_ALL";
     }
 
-    public static Optional<String> getDigitalOut(int pin) {
+    public static TGS_UnionExcuse<String> getDigitalOut(int pin) {
         if (!isPinValid(pin)) {
-            return Optional.empty();
+            return TGS_UnionExcuse.ofExcuse(d.className, "getDigitalOut", "!isPinValid(pin)");
         }
-        return Optional.of("!DO_GET_IDX %d".formatted(pin));
+        return TGS_UnionExcuse.of("!DO_GET_IDX %d".formatted(pin));
     }
 //USAGE: DIGITAL OUT SET----------------------------------
 //USAGE: setDigitalOutAllAsTrue as (cmd) ex: !DO_SET_ALL_TRUE
@@ -56,40 +56,36 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
         return value ? "!DO_SET_ALL_TRUE" : "!DO_SET_ALL_FALSE";
     }
 
-    public static Optional<String> setDigitalOut(int pin, boolean value) {
+    public static TGS_UnionExcuse<String> setDigitalOut(int pin, boolean value) {
         if (!isPinValid(pin)) {
-            return Optional.empty();
+            return TGS_UnionExcuse.ofExcuse(d.className, "setDigitalOut", "!isPinValid(pin)");
         }
-        return Optional.of((value ? "!DO_SET_IDX_TRUE %d" : "!DO_SET_IDX_FALSE %d").formatted(pin));
+        return TGS_UnionExcuse.of((value ? "!DO_SET_IDX_TRUE %d" : "!DO_SET_IDX_FALSE %d").formatted(pin));
     }
 
 //USAGE: DIGITAL OUT OSCILLATE---------------------------
 //USAGE: setDigitalOutOscillating as (cmd, pin1-32, secDuration, secGap, count) ex: !DO_SET_IDX_TRUE_UNTIL 12 2 1 5
-    public static Optional<String> setDigitalOut_OscillatingAll(List<Integer> pins) {
+    public static TGS_UnionExcuse<String> setDigitalOut_OscillatingAll(List<Integer> pins) {
         if (pins.stream().filter(pin -> !isPinValid(pin)).findAny().isPresent()) {
-            d.ce("setDigitalOut_OscillatingAll", "ERROR_PIN_NOT_VALID");
-            return Optional.empty();
+            return TGS_UnionExcuse.ofExcuse(d.className, "setDigitalOut_OscillatingAll", "ERROR_PIN_NOT_VALID");
         }
-        return Optional.of("!DO_SET_ALL_UNTIL %s".formatted(pins.stream().map(i -> i.toString()).collect(Collectors.joining("-"))));
+        return TGS_UnionExcuse.of("!DO_SET_ALL_UNTIL %s".formatted(pins.stream().map(i -> i.toString()).collect(Collectors.joining("-"))));
     }
 
-    public static Optional<String> setDigitalOut_Oscillating(int pin, int secDuration, int secGap, int count) {
+    public static TGS_UnionExcuse<String> setDigitalOut_Oscillating(int pin, int secDuration, int secGap, int count) {
         if (!isPinValid(pin)) {
-            return Optional.empty();
+            return TGS_UnionExcuse.ofExcuse(d.className, "setDigitalOut_Oscillating", "!isPinValid(pin)");
         }
         if (secDuration > MAX_VALUE) {
-            d.ce("setDigitalOut_Oscillating", "ERROR_MAX_VALUE_THRESHOLD", "secDuration", secDuration);
-            return null;
+            return TGS_UnionExcuse.ofExcuse(d.className, "setDigitalOut_Oscillating", "ERROR_MAX_VALUE_THRESHOLD, secDuration: " + secDuration);
         }
         if (secDuration > secGap) {
-            d.ce("setDigitalOut_Oscillating", "ERROR_MAX_VALUE_THRESHOLD", "secGap", secGap);
-            return null;
+            return TGS_UnionExcuse.ofExcuse(d.className, "setDigitalOut_Oscillating", "ERROR_MAX_VALUE_THRESHOLD, secGap: " + secGap);
         }
         if (secDuration > count) {
-            d.ce("setDigitalOut_Oscillating", "ERROR_MAX_VALUE_THRESHOLD", "count", count);
-            return null;
+            return TGS_UnionExcuse.ofExcuse(d.className, "setDigitalOut_Oscillating", "ERROR_MAX_VALUE_THRESHOLD, count: " + count);
         }
-        return Optional.of("!DO_SET_IDX_TRUE_UNTIL %d %d %d %d".formatted(pin, secDuration, secGap, count));
+        return TGS_UnionExcuse.of("!DO_SET_IDX_TRUE_UNTIL %d %d %d %d".formatted(pin, secDuration, secGap, count));
     }
 
     //USAGE: MEMORY-------------------------------------------
@@ -107,20 +103,19 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
         return "!MODE_SET_IDX %d".formatted(idx);
     }
 
-    public static Optional<String> setMemInt_Idx(int idx, int value) {
+    public static TGS_UnionExcuse<String> setMemInt_Idx(int idx, int value) {
         if (value > MAX_VALUE) {
-            d.ce("setMemInt_Idx", "ERROR_MAX_VALUE_THRESHOLD");
-            return Optional.empty();
+            return TGS_UnionExcuse.ofExcuse(d.className, "setMemInt_Idx", "ERROR_MAX_VALUE_THRESHOLD");
         }
-        return Optional.of("!MEMINT_SET_IDX %d %d".formatted(idx, value));
+        return TGS_UnionExcuse.of("!MEMINT_SET_IDX %d %d".formatted(idx, value));
     }
 
-    public static Optional<String> setMemInt_All(List<Integer> values16) {
+    public static TGS_UnionExcuse<String> setMemInt_All(List<Integer> values16) {
         if (values16.stream().filter(i -> i > MAX_VALUE).findAny().isPresent()) {
             d.ce("setMemInt_All", "ERROR_MAX_VALUE_THRESHOLD");
-            return Optional.empty();
+            return TGS_UnionExcuse.ofExcuse(d.className, "setMemInt_All", "ERROR_MAX_VALUE_THRESHOLD");
         }
-        return Optional.of("!MEMINT_SET_ALL %s".formatted(values16.stream().map(i -> i.toString()).collect(Collectors.joining("-"))));
+        return TGS_UnionExcuse.of("!MEMINT_SET_ALL %s".formatted(values16.stream().map(i -> i.toString()).collect(Collectors.joining("-"))));
     }
 
     final public static int MAX_VALUE = 2147483647;
