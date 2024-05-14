@@ -36,7 +36,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
                 var choiceInt = TGS_CastUtils.toInteger(choiceStr);
                 var comX = "COM3";
                 if (choiceInt == null) {
-                    d.cr("test", "custom", choiceStr, TS_SerialComKinConyKC868_A32_R1_2_Chip.callStrOptional(killTrigger, comX, chip -> {
+                    d.cr("test", "custom", choiceStr, TS_SerialComKinConyKC868_A32_R1_2_Chip.call(killTrigger, comX, chip -> {
                         return chip.mb.sendTheCommand_and_fetchMeReplyInMaxSecondsOf(killTrigger, choiceStr, chip.timeout, chip.validReplyPrefix, true);
                     }));
                     continue;
@@ -70,7 +70,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
             }
         } catch (Exception e) {
             TGS_UnSafe.throwIfInterruptedException(e);
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 

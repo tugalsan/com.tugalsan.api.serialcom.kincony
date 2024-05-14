@@ -4,6 +4,7 @@ module com.tugalsan.api.serialcom.kincony {
     requires com.tugalsan.api.list;
     requires com.tugalsan.api.stream;
     requires com.tugalsan.api.unsafe;
+    requires com.tugalsan.api.union;
     requires com.tugalsan.api.cast;
     requires com.tugalsan.api.string;
     requires com.tugalsan.api.thread;
