@@ -6,7 +6,7 @@ import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialCo
 import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder;
 import com.tugalsan.api.serialcom.server.utils.TS_SerialComUtils;
 import com.tugalsan.api.stream.client.TGS_StreamUtils;
-import com.tugalsan.api.string.server.TS_StringUtils;
+import com.tugalsan.api.string.client.TGS_StringUtils;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
 import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
@@ -159,7 +159,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
-            var results = TS_StringUtils.toList_spc(reply.value());
+            var results = TGS_StringUtils.jre().toList_spc(reply.value());
 //            results.stream()
 //                    .filter(val -> (!TGS_CastUtils.isInteger(val)))
 //                    .map(val -> {
