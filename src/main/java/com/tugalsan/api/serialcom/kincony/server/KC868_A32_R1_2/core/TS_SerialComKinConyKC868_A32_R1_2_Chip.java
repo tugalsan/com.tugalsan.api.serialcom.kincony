@@ -1,6 +1,6 @@
 package com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core;
 
-import com.tugalsan.api.callable.client.TGS_CallableType1;
+import com.tugalsan.api.function.client.TGS_Func_OutTyped_In1;
 import com.tugalsan.api.log.server.TS_Log;
 import com.tugalsan.api.serialcom.server.TS_SerialComBuilder;
 import com.tugalsan.api.serialcom.server.TS_SerialComMessageBroker;
@@ -33,11 +33,11 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Chip {
         return new TS_SerialComKinConyKC868_A32_R1_2_Chip(mb, timeout);
     }
 
-    public static <T> TGS_UnionExcuse<T> call(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<TGS_UnionExcuse<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
+    public static <T> TGS_UnionExcuse<T> call(TS_ThreadSyncTrigger killTrigger, String comX, TGS_Func_OutTyped_In1<TGS_UnionExcuse<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip) {
         return call(killTrigger, comX, chip, defaultTimeoutDuration());
     }
 
-    public static <T> TGS_UnionExcuse<T> call(TS_ThreadSyncTrigger killTrigger, String comX, TGS_CallableType1<TGS_UnionExcuse<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip, Duration timeout) {
+    public static <T> TGS_UnionExcuse<T> call(TS_ThreadSyncTrigger killTrigger, String comX, TGS_Func_OutTyped_In1<TGS_UnionExcuse<T>, TS_SerialComKinConyKC868_A32_R1_2_Chip> chip, Duration timeout) {
         var result = new Object() {
             TGS_UnionExcuse<T> value = TGS_UnionExcuse.ofEmpty_NullPointerException();
         };
