@@ -5,7 +5,7 @@ import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.serialcom.kincony.server.KC868_A32_R1_2.core.TS_SerialComKinConyKC868_A32_R1_2_Chip;
 import com.tugalsan.api.serialcom.server.*;
 import com.tugalsan.api.thread.server.sync.TS_ThreadSyncTrigger;
-import com.tugalsan.api.unsafe.client.TGS_UnSafe;
+import com.tugalsan.api.function.client.TGS_FuncUtils;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.stream.*;
@@ -69,7 +69,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
                 }
             }
         } catch (Exception e) {
-            TGS_UnSafe.throwIfInterruptedException(e);
+            TGS_FuncUtils.throwIfInterruptedException(e);
 //            e.printStackTrace();
         }
     }
