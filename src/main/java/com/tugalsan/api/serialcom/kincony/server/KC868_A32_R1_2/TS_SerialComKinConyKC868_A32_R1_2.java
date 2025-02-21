@@ -180,7 +180,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2 {
             if (reply.isExcuse()) {
                 return reply.toExcuse();
             }
-            var result = TGS_CastUtils.toInteger(reply.value());
+            var result = TGS_CastUtils.toInteger(reply.value()).orElse(null);
             if (result == null) {
                 return TGS_UnionExcuse.ofExcuse(d.className, "mode_getIdx", "result == null");
             }

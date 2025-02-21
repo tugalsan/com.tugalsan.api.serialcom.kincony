@@ -33,7 +33,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_Test {
                 d.ci("test", "choice", "10: test_register");
                 System.out.print("choice: ");
                 var choiceStr = reader.readLine();
-                var choiceInt = TGS_CastUtils.toInteger(choiceStr);
+                var choiceInt = TGS_CastUtils.toInteger(choiceStr).orElse(null);
                 var comX = "COM3";
                 if (choiceInt == null) {
                     d.cr("test", "custom", choiceStr, TS_SerialComKinConyKC868_A32_R1_2_Chip.call(killTrigger, comX, chip -> {
