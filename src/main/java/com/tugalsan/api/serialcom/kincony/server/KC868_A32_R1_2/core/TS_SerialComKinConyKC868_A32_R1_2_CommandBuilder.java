@@ -67,8 +67,8 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
 //USAGE: DIGITAL OUT OSCILLATE---------------------------
 //USAGE: setDigitalOutOscillating as (cmd, pin1-32, secDuration, secGap, count) ex: !DO_SET_IDX_TRUE_UNTIL 12 2 1 5
     public static TGS_UnionExcuse<String> setDigitalOut_OscillatingAll(List<Integer> pins) {
-        if (pins.stream().filter(pin -> !isPinValid(pin)).findAny().isPresent()) {
-            return TGS_UnionExcuse.ofExcuse(d.className, "setDigitalOut_OscillatingAll", "pins.stream().filter(pin -> !isPinValid(pin)).findAny().isPresent()");
+        if (pins.stream().anyMatch(pin -> !isPinValid(pin))) {
+            return TGS_UnionExcuse.ofExcuse(d.className, "setDigitalOut_OscillatingAll", "pins.stream().anyMatch(pin -> !isPinValid(pin))");
         }
         return TGS_UnionExcuse.of("!DO_SET_ALL_UNTIL %s".formatted(pins.stream().map(i -> i.toString()).collect(Collectors.joining("-"))));
     }
@@ -112,7 +112,7 @@ public class TS_SerialComKinConyKC868_A32_R1_2_CommandBuilder {
     }
 
     public static TGS_UnionExcuse<String> setMemInt_All(List<Integer> values16) {
-        if (values16.stream().filter(i -> i > MAX_VALUE).findAny().isPresent()) {
+        if (values16.stream().anyMatch(i -> i > MAX_VALUE)) {
             TGS_UnionExcuse.ofExcuse(d.className, "setMemInt_All", "ERROR_MAX_VALUE_THRESHOLD");
         }
         return TGS_UnionExcuse.of("!MEMINT_SET_ALL %s".formatted(values16.stream().map(i -> i.toString()).collect(Collectors.joining("-"))));
